@@ -1,10 +1,8 @@
 import unittest
-from rss import RSSobject
+from RSSFeed import RSSobject
 
-class RSStester(unittest.Testcase):
+class RSSTester(unittest.TestCase):
     def setUp(self):
-        self.RSS = RSSobject()
-
-    def rss_connection_test(self):
-        self.RSS.raw('http://feeds.bbci.co.uk/news/rss.xml')
-        assert '<html>' in self.RSS.rss_page
+        self.RSS = RSSobject('http://feeds.bbci.co.uk/news/rss.xml')
+    def rss_raw_page_test(self):
+        assert '<?xml' in self.RSS.raw
