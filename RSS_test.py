@@ -19,8 +19,8 @@ class RSSViceTester(unittest.TestCase):
 
     def vice_article_list_test(self):
         self.vice.article_split()
-        self.assertEqual(type(self.vice.vice), list)
+        self.assertEqual(type(self.vice.articles), list)
 
     def vice_article_text_test(self):
         self.vice.article_split()
-        self.assertEqual(type(self.vice.vice[0]['title']), str)
+        self.assertEqual(type(self.vice.articles[0]['title']), str)
