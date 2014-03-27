@@ -1,12 +1,14 @@
 import unittest
 from RSSFeed import RSSobject, ViceRSS
+from bs4.element import NavigableString
+from bs4 import BeautifulSoup
 
 class RSSTester(unittest.TestCase):
 
     def setUp(self):
         self.RSS = RSSobject('http://feeds.bbci.co.uk/news/rss.xml')
 
-    def rss_raw_page_test(self):
+    def test_rss_raw_page(self):
         assert '<?xml' in self.RSS.raw
 
     #def rss_soup_page_test(self):
@@ -15,12 +17,19 @@ class RSSTester(unittest.TestCase):
 class RSSViceTester(unittest.TestCase):
     
     def setUp(self):
-        self.vice = ViceRSS('http://www.vice.com/rss')
+        self.vice = ViceRSS(None)
+        with open("vice.rss", "r") as f:
+            self.vice.raw = f.read()
+            self.vice.soup = BeautifulSoup(self.vice.raw)
 
-    def vice_article_list_test(self):
+
+    def test_vice_article_list(self):
         self.vice.article_split()
         self.assertEqual(type(self.vice.articles), list)
 
-    def vice_article_text_test(self):
+    def test_vice_article_text(self):
         self.vice.article_split()
-        self.assertEqual(type(self.vice.articles[0]['title']), str)
+        self.assertEqual(type(self.vice.articles[0]['title']), NavigableString)
+
+if __name__ == "__main__":
+    unittest.main()
