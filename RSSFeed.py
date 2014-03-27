@@ -10,9 +10,10 @@ class RSSobject(object):
            averages (collections.OrderedDict): sorted dictionary of words           and their count in all articles of web pull.
     """
      def __init__(self, url):
-          t = urllib2.urlopen(url)
-          self.raw = t.read()
-          self.soup = BeautifulSoup(self.raw)
+          if url:
+               t = urllib2.urlopen(url)
+               self.raw = t.read()
+               self.soup = BeautifulSoup(self.raw)
 
      def average_words(self):
           if self.articles:
