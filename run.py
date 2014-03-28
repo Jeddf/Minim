@@ -1,9 +1,11 @@
 import RSSFeed
 import pdb
+from bs4 import BeautifulSoup
 
-g = RSSFeed.ViceRSS('http://www.jeddfenner.com/vice.xml')
+g = RSSFeed.ViceRSS(None)
+with open("vice.rss", "r") as f:
+    g.raw = f.read()
+    g.soup = BeautifulSoup(g.raw)
 g.article_split()
 g.average_words()
-print 'raw type: ', type(g.raw)
-print 'soup type: ', type(g.soup)
-print 'averages type: ', type(g.averages)
+print g.averages
