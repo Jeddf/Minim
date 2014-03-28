@@ -20,22 +20,23 @@ class RSSobject(object):
                self.averages = {}
                for i in self.articles:
                     words = i['text'].split()
-               for t in words:
-                    if t in self.averages:
-                         self.averages[t] += 1
-                    else:
-                         self.averages[t] = 1
+                    for t in words:
+                         t = t.strip('(),.:;[]{}}]').title()
+                         if t in self.averages:
+                              self.averages[t] += 1
+                         else:
+                              self.averages[t] = 1
           self.averages = OrderedDict(sorted(self.averages.items(), key=lambda t: t[1]))
 
-class ViceRSS(RSSobject):    # Vice Class tailored for site structure
-    def article_split(self):    # Split feed into articles
-        items = self.soup.find_all('item')    # <item> contents into list
-        self.articles = []   # Initiate dump for data
+class ViceRSS(RSSobject):    # Vice Class tailored for vice.com/rss as of March 2014, returns 50 latest.
+    def article_split(self):
+        items = self.soup.find_all('item')
+        self.articles = []
         for n, i in enumerate(items):
-            i = str(i)    # Convert soup object to string
-            i = i.replace(r'!', ' ')    # Takeout ! so soup will parse
-            soop = BeautifulSoup(i)    # Cook soup
-            self.articles.append({'title': soop.title.string})    # Title save
-            t = soop.get_text(" ", strip=True)    # Get contents of all tags and return in 1 string seperated by space
-            t = t.partition('[CDATA[')[2]    # Trim leading and following fluff
+            i = str(i)
+            i = i.replace(r'!', ' ')
+            soop = BeautifulSoup(i)
+            self.articles.append({'title': soop.title.string})
+            t = soop.get_text(" ", strip=True)
+            t = t.partition('[CDATA[')[2]
             self.articles[n]['text'] = t.partition('< --')[0]
