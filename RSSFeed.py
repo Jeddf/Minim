@@ -1,8 +1,6 @@
 import urllib2
 from bs4 import BeautifulSoup
-from collections import OrderedDict
 import sqlite3
-from random import randint
 
 class RSSobject(object):
      """Base RSS parser class.
@@ -30,32 +28,40 @@ class RSSobject(object):
           with open("pronouns.csv", "r") as h:
                t = h.read()
                self.borings.extend(t.split())
+          with open("otherborings.csv", "r") as h:
+               t = h.read()
+               self.borings.extend(t.split())
                
-               def average_words(self):
+     def average_words(self):
           if self.articles:
                self.averages = {}
                for i in self.articles:
                     words = i['text'].split()
                     for t in words:
-                         t = t.strip('(),.:;[]{}"\'').title()
+                         t = t.strip(' (),.:;[]{}"\'').title()
                          if t in self.borings:
+                              continue
+                         if t == "":
                               continue
                          elif t in self.averages:
                               self.averages[t] += 1
                          else:
                               self.averages[t] = 1
-          self.averages = OrderedDict(sorted(self.averages.items(), key=lambda t: t[1]))
-          
-     def sql_commit(self):
-#          key = randint(1,9999999999)
-          with sqlite3.connect("counts1.db") as conn:
-               cursin = conn.cursor()
-               cursin.execute("""
+               
+               with sqlite3.connect("counts1.db") as conn:
+                    cursin = conn.cursor()
+                    if cursin.execute("""
+                                      SELECT source FROM submits
+                                      WHERE source = ? AND date=date('now')
+                                      ;""", ([self.source])).fetchall():
+                         return
+                    else:
+                         cursin.execute("""
                               INSERT into submits (source, date)
                               VALUES(?, date('now')
                               );""", ([self.source]))
-               for i in self.averages:
-                    cursin.execute("""
+                         for i in self.averages:
+                              cursin.execute("""
                                   INSERT into wordage (word, count, submitid)
                                   VALUES(?, ?, (SELECT id FROM submits WHERE source=? AND date=date('now')))
                                   ;""", (i, self.averages[i], self.source))
@@ -68,6 +74,7 @@ class ViceRSS(RSSobject):    # Vice Class tailored for vice.com/rss as of March 
         for n, i in enumerate(items):
             i = str(i)
             i = i.replace(r'!', ' ')
+            i = i.decode("utf-8").replace(u'\u2019', "'").replace('   ', ' ').encode("utf-8")
             soop = BeautifulSoup(i)
             self.articles.append({'title': soop.title.string})
             t = soop.get_text(" ", strip=True)
