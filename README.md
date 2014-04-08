@@ -4,8 +4,3 @@
 
 ### Currently works for:
 * VICE.com
-
-### Dependancies
-* python2.7
-* flask
-* beautifulsoup4
