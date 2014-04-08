@@ -8,5 +8,4 @@ with open("vice.rss", "r") as f:
     g.soup = BeautifulSoup(g.raw)
 g.article_split()
 g.average_words()
-g.sql_commit()
 print len(g.averages)
