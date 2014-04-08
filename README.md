@@ -6,6 +6,6 @@
 * VICE.com
 
 ### Dependancies
-*Python 2.7
-*Flask
-*beautifulsoup4
+* python2.7
+* flask
+* beautifulsoup4
