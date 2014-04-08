@@ -16,19 +16,19 @@ class RSSobject(object):
                t = urllib2.urlopen(url)
                self.raw = t.read()
                self.soup = BeautifulSoup(self.raw)
-          with open("conjunctions.csv", "r") as h:
+          with open("static/conjunctions.csv", "r") as h:
                t = h.read()               
                self.borings = t.split()
-          with open("prepositions.csv", "r") as h:
+          with open("static/prepositions.csv", "r") as h:
                t = h.read()
                self.borings.extend(t.split())
-          with open("determiners.csv", "r") as h:
+          with open("static/determiners.csv", "r") as h:
                t = h.read()
                self.borings.extend(t.split())
-          with open("pronouns.csv", "r") as h:
+          with open("static/pronouns.csv", "r") as h:
                t = h.read()
                self.borings.extend(t.split())
-          with open("otherborings.csv", "r") as h:
+          with open("static/otherborings.csv", "r") as h:
                t = h.read()
                self.borings.extend(t.split())
                
