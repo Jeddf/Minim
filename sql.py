@@ -8,7 +8,7 @@ with sqlite3.connect("counts1.db") as conn:
                    );""")
     cursin.execute("""CREATE TABLE wordage
                    (submitid INTEGER NOT NULL,
-                   word TEXT,
-                   count TEXT,
+                   word TEXT NOT NULL,
+                   count NUMBER,
                    FOREIGN KEY(submitid) REFERENCES submits(id)
                    );""")
