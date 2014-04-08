@@ -1,0 +1,43 @@
+body {
+  margin: 0;
+  font-family:"Open Sans", sans-serif;
+  cursor: default;
+  overflow: auto;
+}
+#title-block {
+  color: blue;
+  max-width:80%;
+  margin:0 auto;
+  display:block;
+}
+#main {
+  max-width:80%;
+  margin:0 auto;
+}
+.words {
+  max-width:70%;
+  margin:0 auto;
+  float:left;
+}
+.counts {
+  max-width:30%;
+  margin:0 auto;
+  float:left;
+}
+.site {
+  width: 40%;
+  margin:0 auto;
+  float:left;
+}
+#title-block:hover {
+  color:black;
+}
+.group:after{
+  visibility:hidden;
+  display:block;
+  content: "";
+  clear: both;
+  height: 0;
+}
+* html .group { zoom: 1; }
+*:first-child+html .group { zoom: 1; }
