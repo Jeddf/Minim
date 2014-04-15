@@ -6,6 +6,6 @@
 * VICE.com
 
 #### Instructions (Convoluted)
-* Run 'python sql.py' to initiate database with schema
-* Run 'python run.py' to populate database using cached vice.com feed
-* Run 'python routes.py' to start local flask server (WARNING: DEBUG is ON and app is externally accessible)
+* Run 'Minim.py' to populate database and run server (WARNING: DEBUG is ON)
+* Visit the route '/initdb' to initiate local database
+* Visit the route '/refresh' to populate database

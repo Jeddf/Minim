@@ -1,6 +1,7 @@
 import urllib2
 from bs4 import BeautifulSoup
 import sqlite3
+import Minim
 
 class RSSobject(object):
      """Base RSS parser class.
@@ -16,21 +17,11 @@ class RSSobject(object):
                t = urllib2.urlopen(url)
                self.raw = t.read()
                self.soup = BeautifulSoup(self.raw)
-          with open("static/conjunctions.csv", "r") as h:
-               t = h.read()               
-               self.borings = t.split()
-          with open("static/prepositions.csv", "r") as h:
-               t = h.read()
-               self.borings.extend(t.split())
-          with open("static/determiners.csv", "r") as h:
-               t = h.read()
-               self.borings.extend(t.split())
-          with open("static/pronouns.csv", "r") as h:
-               t = h.read()
-               self.borings.extend(t.split())
-          with open("static/otherborings.csv", "r") as h:
-               t = h.read()
-               self.borings.extend(t.split())
+          self.borings = []
+          for f in ["conjunctions", "prepositions", "determiners", "pronouns", "otherborings"]:
+               with open("static/{}.csv".format(f), "r") as h:
+                    t = h.read()               
+                    self.borings.extend(t.split())
                
      def average_words(self):
           if self.articles:
@@ -48,24 +39,6 @@ class RSSobject(object):
                          else:
                               self.averages[t] = 1
                
-               with sqlite3.connect("counts1.db") as conn:
-                    cursin = conn.cursor()
-                    if cursin.execute("""
-                                      SELECT source FROM submits
-                                      WHERE source = ? AND date=date('now')
-                                      ;""", ([self.source])).fetchall():
-                         return
-                    else:
-                         cursin.execute("""
-                              INSERT into submits (source, date)
-                              VALUES(?, date('now')
-                              );""", ([self.source]))
-                         for i in self.averages:
-                              cursin.execute("""
-                                  INSERT into wordage (word, count, submitid)
-                                  VALUES(?, ?, (SELECT id FROM submits WHERE source=? AND date=date('now')))
-                                  ;""", (i, self.averages[i], self.source))
-
 class ViceRSS(RSSobject):    # Vice Class tailored for vice.com/rss as of March 2014, returns 50 latest.
 
      def article_split(self):

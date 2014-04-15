@@ -15,12 +15,12 @@
         {% for source in sites %}
           <h2>{{source}}</h2>
           <ul class='words'>
-            {% for word in logs[source][0:9] %}
+            {% for word in logs[source][0:19] %}
               <div>{{word[0]}}</div>
             {% endfor %}
           </ul>
           <ul class='counts'>
-            {% for count in logs[source][10:19] %}
+            {% for count in logs[source][20:39] %}
               <div>{{count[0]}}</div>
             {% endfor %}
           </ul>
