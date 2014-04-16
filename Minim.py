@@ -55,20 +55,21 @@ def home():
     with sqlite3.connect('counts.db') as db:
         curs = db.cursor()
         for site in sites:
+            logs[site]={}
             curs = db.execute("""SELECT word
                                FROM wordage
                                WHERE submitid ==
                                (SELECT MAX(id) from submits WHERE source=?)
                                ORDER BY count DESC
-                               LIMIT 20""", ([sites[0]]))
-            logs[site] = curs.fetchall()
+                              """, ([sites[0]]))
+            logs[site]['words'] = curs.fetchall()
             curs = db.execute("""SELECT count
                                 FROM wordage
                                 WHERE submitid ==
                                 (SELECT MAX(id) from submits WHERE source=?)
                                 ORDER BY count DESC
-                                LIMIT 20""", ([sites[0]]))
-            logs[site].extend(curs.fetchall())
+                                """, ([sites[0]]))
+            logs[site]['counts'] = curs.fetchall()
     return render_template('home.html', logs=logs, sites=sites)
 
 if __name__ == '__main__':
