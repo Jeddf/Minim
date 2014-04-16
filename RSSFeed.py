@@ -1,7 +1,5 @@
-import urllib2
+import urllib2, sqlite3, Minim, re
 from bs4 import BeautifulSoup
-import sqlite3
-import Minim
 
 class RSSobject(object):
      """Base RSS parser class.
@@ -26,10 +24,13 @@ class RSSobject(object):
      def average_words(self):
           if self.articles:
                self.averages = {}
+               ess = re.compile(r"'s")
                for i in self.articles:
                     words = i['text'].split()
                     for t in words:
-                         t = t.strip(' (),.:;[]{}"\'').title()
+                         t = t.strip(' (),.:;[]{}"\'&<>?')
+                         t = t.strip(' (),.:;[]{}"\'&<>?').capitalize()
+                         t = ess.sub('', t)
                          if t in self.borings:
                               continue
                          if t == "":
