@@ -5,7 +5,7 @@
 ##### Currently works for:
 * VICE.com
 
-##### Instructions (Convoluted)
-* Run 'Minim.py' to run server (WARNING: DEBUG is ON)
+##### Instructions
+* Run 'Minim.py' to run flask server (WARNING: DEBUG is ON)
 * Visit the route '/initdb' to initiate local database
 * Visit the route '/refresh' to populate database
