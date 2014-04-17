@@ -1,5 +1,6 @@
-import urllib2, sqlite3, Minim, re
+import sqlite3, Minim, re, string
 from bs4 import BeautifulSoup
+from urllib.request import urlopen
 
 class RSSobject(object):
      """Base RSS parser class.
@@ -12,7 +13,7 @@ class RSSobject(object):
 
      def __init__(self, url):
           if url:
-               t = urllib2.urlopen(url)
+               t = urlopen(url)
                self.raw = t.read()
                self.soup = BeautifulSoup(self.raw)
           self.borings = []
@@ -28,8 +29,8 @@ class RSSobject(object):
                for i in self.articles:
                     words = i['text'].split()
                     for t in words:
-                         t = t.strip(' (),.:;[]{}"\'&<>?')
-                         t = t.strip(' (),.:;[]{}"\'&<>?').capitalize()
+                         t = t.strip(string.punctuation + '“”‘’')
+                         t = t.strip(string.punctuation + '“”‘’').capitalize()
                          t = ess.sub('', t)
                          if t in self.borings:
                               continue
@@ -48,7 +49,7 @@ class ViceRSS(RSSobject):    # Vice Class tailored for vice.com/rss as of March 
         for n, i in enumerate(items):
             i = str(i)
             i = i.replace(r'!', ' ')
-            i = i.decode("utf-8").replace(u'\u2019', "'").replace('   ', ' ').encode("utf-8")
+            i = i.replace(u'\u2019', "'").replace('   ', ' ')
             soop = BeautifulSoup(i)
             self.articles.append({'title': soop.title.string})
             t = soop.get_text(" ", strip=True)
