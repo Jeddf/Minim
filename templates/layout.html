@@ -11,19 +11,24 @@
       </div>
     </div>
     <div id='main' class = 'group'>
-      <div class='site'>
         {% for source in sites %}
-          <h2>{{source}}</h2>
+        <div class='sitle'>  
+	  <h2>{{source}}</h2>
+	</div>
+	<div class='data'>
+	<div class='list'>
           <ul class='words'>
-            {% for word in logs[source]['words'][0:50] %}
+            {% for word in logs[source]['words'][0:500] %}
               <div>{{word[0]}}</div>
             {% endfor %}
           </ul>
           <ul class='counts'>
-            {% for count in logs[source]['counts'][0:50] %}
+            {% for count in logs[source]['counts'][0:500] %}
               <div>{{count[0]}}</div>
             {% endfor %}
           </ul>
+	</div>
+	</div>
         {% endfor %}
       </div>
     </div>
