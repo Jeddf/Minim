@@ -1,3 +1,4 @@
-beautifulsoup
+beautifulsoup4
 flask
 sqlite3
+python3
