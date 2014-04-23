@@ -40,7 +40,7 @@ body {
 }
 .list{
   height: 90%;
-  min-width: 915px;
+  width: 915px;
   -webkit-column-count: 4;
   padding-top: 1%;
   padding-bottom: 1%;
