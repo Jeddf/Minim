@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 app.config.update(dict(
     DATABASE=os.path.join(app.root_path, 'counts.db'),
-    DEBUG=True,
+    DEBUG=False,
 ))
 app.config.from_envvar('FLASKR_SETTINGS', silent=True)
 
