@@ -18,12 +18,12 @@
 	<div class='data'>
 	<div class='list'>
           <ul class='words'>
-            {% for word in logs[source]['words'][0:500] %}
+            {% for word in logs[source]['words'][0:2000] %}
               <div>{{word[0]}}</div>
             {% endfor %}
           </ul>
           <ul class='counts'>
-            {% for count in logs[source]['counts'][0:500] %}
+            {% for count in logs[source]['counts'][0:2000] %}
               <div>{{count[0]}}</div>
             {% endfor %}
           </ul>

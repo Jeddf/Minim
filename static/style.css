@@ -30,6 +30,7 @@ body {
   float:left;
   background-color: rgb(0, 229, 16);
   overflow-x: scroll;
+  overflow-y: hidden;
   height: 260px;
 }
 .sitle h2{
@@ -40,8 +41,13 @@ body {
 }
 .list{
   height: 90%;
-  min-width: 915px;
+  min-width: 940px;
   -webkit-column-count: 4;
+  -moz-column-count: 4;
+  column-count: 4;
+  column-gap: 0px;
+  -webkit-column-gap: 0px;
+  -moz-column-gap: 0px;
   padding-top: 1%;
   padding-bottom: 1%;
 }
