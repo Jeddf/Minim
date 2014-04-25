@@ -26,12 +26,14 @@ class RSSobject(object):
           if self.articles:
                self.averages = {}
                ess = re.compile(r"'s")
+               esss = re.compile(r"’s")
                for i in self.articles:
                     words = i['text'].split()
                     for t in words:
                          t = t.strip(string.punctuation + '“”‘’')
                          t = t.strip(string.punctuation + '“”‘’').capitalize()
                          t = ess.sub('', t)
+                         t = esss.sub('', t)
                          if t in self.borings:
                               continue
                          if t == "":
@@ -49,9 +51,9 @@ class ViceRSS(RSSobject):    # Vice Class tailored for vice.com/rss as of March 
         for n, i in enumerate(items):
             i = str(i)
             i = i.replace(r'!', ' ')
-            i = i.replace(u'\u2019', "'").replace('   ', ' ')
             soop = BeautifulSoup(i)
-            self.articles.append({'title': soop.title.string})
+            self.articles[n]['title'] = soop.title.string
+            self.articles[n]['href'] = soop.link.string
             t = soop.get_text(" ", strip=True)
             t = t.partition('[CDATA[')[2]
             self.articles[n]['text'] = t.partition('< --')[0]
