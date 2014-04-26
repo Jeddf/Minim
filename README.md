@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/jeddf/minim.png?label=ready&title=Ready)](https://waffle.io/jeddf/minim)
 # MINIM
 
 #### Web app displaying most used words across recently published articles
