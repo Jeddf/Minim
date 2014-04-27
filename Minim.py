@@ -12,19 +12,22 @@ app.config.update(dict(
 ))
 app.config.from_envvar('FLASKR_SETTINGS', silent=True)
 
-@app.route('/initdb')
-def init_db():
-    with sqlite3.connect('counts.db') as db:
-        curs = db.cursor()
-        with open('schema.sql', mode='r') as f:
-            curs.executescript(f.read())
-        db.commit()
-    return 'initiated'
-
-@app.route('/refresh')
-def crawl():
+@app.route('/refresh/<offline>')
+def crawl(offline=0):
+    if not os.path.isfile("counts.db"):
+        with sqlite3.connect('counts.db') as db:
+            curs = db.cursor()
+            with open('schema.sql', mode='r') as f:
+                curs.executescript(f.read())
     i = []
-    i.append(RSSFeed.ViceRSS('http://www.vice.com/rss'))
+    if offline:
+        g = RSSFeed.ViceRSS(None)
+        with open("vice.rss", "r") as f:
+            g.raw = f.read()
+            g.soup = BeautifulSoup(g.raw)
+        i.append(g)
+    else:
+        i.append(RSSFeed.ViceRSS('http://www.vice.com/rss'))
     for t in i:
         t.article_split()
         t.average_words()
@@ -34,20 +37,24 @@ def crawl():
                         SELECT source FROM submits
                         WHERE source = ? AND date=date('now')
                         ;""", ([t.source])).fetchall():
-                return
+                return 'Already populated today.'
             else:
                 curs.execute("""
                          INSERT into submits (source, date)
                          VALUES(?, date('now')
                      );""", ([t.source]))
                 for p in t.averages:
+                    x = 0
+                    for r in t.articles:
+                        if p in r:
+                             x += 1
                     curs.execute("""
-                             INSERT into wordage (word, count, submitid)
-                             VALUES(?, ?, (SELECT id FROM submits
+                             INSERT into wordage (word, count, appears, submitid)
+                             VALUES(?, ?, ?, (SELECT id FROM submits
                              WHERE source=? AND date=date('now')))
-                             ;""", (p, t.averages[p], t.source))
+                             ;""", (p, t.averages[p], x, t.source))
     return 'Refreshed.'
-    
+
 @app.route('/')
 def home():
     sites=['VICE']

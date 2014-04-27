@@ -1,4 +1,4 @@
-import sqlite3, Minim, re, string
+import sqlite3, Minim, re, string, pdb
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 
@@ -27,7 +27,7 @@ class RSSobject(object):
                self.averages = {}
                ess = re.compile(r"'s")
                esss = re.compile(r"’s")
-               for i in self.articles:
+               for x, i in enumerate(self.articles):
                     words = i['text'].split()
                     for t in words:
                          t = t.strip(string.punctuation + '“”‘’')
@@ -42,6 +42,7 @@ class RSSobject(object):
                               self.averages[t] += 1
                          else:
                               self.averages[t] = 1
+                         self.articles[x][t] = 1
                
 class ViceRSS(RSSobject):    # Vice Class tailored for vice.com/rss as of March 2014, returns 50 latest.
 
@@ -52,8 +53,10 @@ class ViceRSS(RSSobject):    # Vice Class tailored for vice.com/rss as of March 
             i = str(i)
             i = i.replace(r'!', ' ')
             soop = BeautifulSoup(i)
+            self.articles.append({})
             self.articles[n]['title'] = soop.title.string
             self.articles[n]['href'] = soop.link.string
+            self.articles[n]['date'] = soop.pubdate.string
             t = soop.get_text(" ", strip=True)
             t = t.partition('[CDATA[')[2]
             self.articles[n]['text'] = t.partition('< --')[0]
