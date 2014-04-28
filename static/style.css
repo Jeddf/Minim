@@ -75,31 +75,31 @@ ul div{
     color:white;
 }
 .reg2:after, .cou2:before{
-    content:"..";
+    content:".";
     color:white;
 }
 .reg3:after, .cou3:before{
-    content:"...";
+    content:".";
     color:white;
 }
 .reg4:after, .cou4:before{
-    content:"....";
+    content:"..";
     color:white;
 }
 .reg5:after, .cou5:before{
-    content:".....";
+    content:"..";
     color:white;
 }
 .reg6:after, .cou6:before{
-    content:"......";
+    content:"..";
     color:white;
 }
 .reg7:after, .cou7:before{
-    content:".......";
+    content:"...";
     color:white;
 }
 .reg8:after, .cou8:before{
-    content:"........";
+    content:"...";
     color:white;
 }
 .group:after{
