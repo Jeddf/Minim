@@ -40,19 +40,21 @@ def crawl(offline=0):
                 return 'Already populated today.'
             else:
                 curs.execute("""
-                         INSERT into submits (source, date)
-                         VALUES(?, date('now')
-                     );""", ([t.source]))
-                for p in t.averages:
-                    x = 0
+                                INSERT into submits (source, cumul, articles, date)
+                                VALUES(?, ?, ?, date('now')
+                                );"""
+                            , (t.source, t.cumul, len(t.articles)))
+                for a in t.averages:
+                    x=0
                     for r in t.articles:
-                        if p in r:
-                             x += 1
+                        if a in r:
+                            if x < 8:
+                                x += 1
                     curs.execute("""
                              INSERT into wordage (word, count, appears, submitid)
                              VALUES(?, ?, ?, (SELECT id FROM submits
                              WHERE source=? AND date=date('now')))
-                             ;""", (p, t.averages[p], x, t.source))
+                             ;""", (a, t.averages[a], x, t.source))
     return 'Refreshed.'
 
 @app.route('/')
@@ -62,21 +64,23 @@ def home():
     with sqlite3.connect('counts.db') as db:
         curs = db.cursor()
         for site in sites:
-            logs[site]={}
-            curs = db.execute("""SELECT word
-                               FROM wordage
-                               WHERE submitid ==
+            logs[site]=[]
+            curs = db.execute("""SELECT id, cumul, articles, date
+                               FROM submits
+                               WHERE id ==
                                (SELECT MAX(id) from submits WHERE source=?)
+                               """, ([site]))
+            i = curs.fetchall()[0]
+            submit_id = i[0]
+            logs[site].append({'cumul':i[1], 'articles':i[2], 'date':i[3]})
+            curs = db.execute("""SELECT word, count, appears
+                               FROM wordage
+                               WHERE submitid == ?
                                ORDER BY count DESC
-                              """, ([sites[0]]))
-            logs[site]['words'] = curs.fetchall()
-            curs = db.execute("""SELECT count
-                                FROM wordage
-                                WHERE submitid ==
-                                (SELECT MAX(id) from submits WHERE source=?)
-                                ORDER BY count DESC
-                                """, ([sites[0]]))
-            logs[site]['counts'] = curs.fetchall()
+                              """, ([submit_id]))
+            g = curs.fetchall()
+            for i in g:
+                logs[site].append({'word':i[0], 'counted':i[1], 'appears':i[2]})
     return render_template('home.html', logs=logs, sites=sites)
 
 if __name__ == '__main__':

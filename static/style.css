@@ -9,20 +9,24 @@ body {
   max-width:80%;
   margin:0 auto;
   display:block;
+  font-size:0.9em;
+}
+h1:after{
+content: ".pw";
+font-size: 0.7em;
 }
 #main {
   max-width:80%;
   margin:0 auto;
 }
-.words {
-  max-width:70%;
-  margin:0 auto;
+.word {
   float:left;
 }
-.counts {
-  max-width:30%;
-  margin:0 auto;
-  float:left;
+.count {
+  float:right;
+}
+ul div{
+  display:block;
 }
 .data {
   width: 100%;
@@ -37,7 +41,12 @@ body {
   margin: 0;
   padding-left: 1em;
   padding-top: 10px;
-  background-color: rgb(0, 229, 16);
+  margin-bottom: -4px;
+  display: inline-block;
+}
+.sitle p{
+    display: inline;
+    font-size:0.8em;
 }
 .list{
   height: 90%;
@@ -45,14 +54,45 @@ body {
   -webkit-column-count: 4;
   -moz-column-count: 4;
   column-count: 4;
-  column-gap: 0px;
-  -webkit-column-gap: 0px;
-  -moz-column-gap: 0px;
-  padding-top: 1%;
+  column-gap: 0;
+  -webkit-column-gap: 0;
+  -moz-column-gap: 0;
+  padding-top: 2%;
   padding-bottom: 1%;
 }
 #title-block:hover {
   color:black;
+}
+.record{
+  width:90%;
+  color:black;
+}
+.record:hover{
+  color:white;
+}
+.reg1{
+    background-color:#005c06;
+}
+.reg2{
+    background-color:#006f08;
+}
+.reg3{
+    background-color:#008309;
+}
+.reg4{
+    background-color:#00970b;
+}
+.reg5{
+    background-color:#00aa0c;
+}
+.reg6{
+    background-color:#00BE0D;
+}
+.reg7{
+    background-color:#000d10f;
+}
+.reg8{
+    background-color:#00e510;
 }
 .group:after{
   visibility:hidden;

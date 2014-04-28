@@ -19,7 +19,7 @@ class RSSobject(object):
           self.borings = []
           for f in ["conjunctions", "prepositions", "determiners", "pronouns", "otherborings"]:
                with open("static/{}.csv".format(f), "r") as h:
-                    t = h.read()               
+                    t = h.read()
                     self.borings.extend(t.split())
                
      def average_words(self):
@@ -43,6 +43,7 @@ class RSSobject(object):
                          else:
                               self.averages[t] = 1
                          self.articles[x][t] = 1
+               self.cumul = sum(self.averages.values())
                
 class ViceRSS(RSSobject):    # Vice Class tailored for vice.com/rss as of March 2014, returns 50 latest.
 

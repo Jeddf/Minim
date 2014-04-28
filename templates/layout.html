@@ -10,24 +10,22 @@
         <h1>MINIM</h1>
       </div>
     </div>
-    <div id='main' class = 'group'>
+    <div id='main'>
         {% for source in sites %}
-        <div class='sitle'>  
-	  <h2>{{source}}</h2>
+        <div class='sitle'>
+	  <h2>{{source}}.com</h2>  <p><i>{{logs[source][0]['cumul']}}</i> words across <i>{{logs[source][0]['articles']}}</i> latest articles.</p>
 	</div>
 	<div class='data'>
-	<div class='list'>
-          <ul class='words'>
-            {% for word in logs[source]['words'][0:2000] %}
-              <div>{{word[0]}}</div>
+	  <div class='list'>
+	    <ul>
+            {% for word in logs[source][1:2001] %}
+            <div class='record group reg{{word["appears"]}}'>
+	      <div class='word'>{{word['word']}}</div> 
+	      <div class='count'>{{word['counted']}}</div>
+	    </div>
             {% endfor %}
-          </ul>
-          <ul class='counts'>
-            {% for count in logs[source]['counts'][0:2000] %}
-              <div>{{count[0]}}</div>
-            {% endfor %}
-          </ul>
-	</div>
+            </ul>
+	  </div>
 	</div>
         {% endfor %}
       </div>

@@ -1,6 +1,8 @@
 CREATE TABLE submits(
        id INTEGER PRIMARY KEY NOT NULL, 
-       source TEXT, 
+       source TEXT,
+       cumul NUMBER,
+       articles NUMBER, 
        date TEXT
 );
 
