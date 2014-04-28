@@ -70,29 +70,37 @@ ul div{
 .record:hover{
   color:white;
 }
-.reg1{
-    background-color:#005c06;
+.reg1:after, .cou1:before{
+    content:".";
+    color:white;
 }
-.reg2{
-    background-color:#006f08;
+.reg2:after, .cou2:before{
+    content:"..";
+    color:white;
 }
-.reg3{
-    background-color:#008309;
+.reg3:after, .cou3:before{
+    content:"...";
+    color:white;
 }
-.reg4{
-    background-color:#00970b;
+.reg4:after, .cou4:before{
+    content:"....";
+    color:white;
 }
-.reg5{
-    background-color:#00aa0c;
+.reg5:after, .cou5:before{
+    content:".....";
+    color:white;
 }
-.reg6{
-    background-color:#00BE0D;
+.reg6:after, .cou6:before{
+    content:"......";
+    color:white;
 }
-.reg7{
-    background-color:#000d10f;
+.reg7:after, .cou7:before{
+    content:".......";
+    color:white;
 }
-.reg8{
-    background-color:#00e510;
+.reg8:after, .cou8:before{
+    content:"........";
+    color:white;
 }
 .group:after{
   visibility:hidden;

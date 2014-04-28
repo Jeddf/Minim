@@ -19,9 +19,9 @@
 	  <div class='list'>
 	    <ul>
             {% for word in logs[source][1:2001] %}
-            <div class='record group reg{{word["appears"]}}'>
-	      <div class='word'>{{word['word']}}</div> 
-	      <div class='count'>{{word['counted']}}</div>
+            <div class='record group'>
+	      <div class='word reg{{word["appears"]}}'>{{word['word']}}</div> 
+	      <div class='count cou{{word["appears"]}}'>{{word['counted']}}</div>
 	    </div>
             {% endfor %}
             </ul>
