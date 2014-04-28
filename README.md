@@ -6,6 +6,6 @@
 * VICE.com
 
 ##### Instructions
-* 'Python Minim.py' to run flask app server (WARNING: DEBUG is ON)
+* 'python3 Minim.py' to run flask app server
 * Visit the route '/initdb' to initiate local database
-* Visit the route '/refresh' to populate database
+* Visit the route '/refresh/0' to populate database
