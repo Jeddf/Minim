@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 app.config.update(dict(
     DATABASE=os.path.join(app.root_path, 'counts.db'),
-    DEBUG=False,
+    DEBUG=True,
 ))
 app.config.from_envvar('FLASKR_SETTINGS', silent=True)
 
@@ -48,7 +48,6 @@ def crawl(offline=0):
                     x=0
                     for r in t.articles:
                         if a in r:
-                            if x < 8:
                                 x += 1
                     curs.execute("""
                              INSERT into wordage (word, count, appears, submitid)
@@ -79,8 +78,15 @@ def home():
                                ORDER BY count DESC
                               """, ([submit_id]))
             g = curs.fetchall()
-            for i in g:
-                logs[site].append({'word':i[0], 'counted':i[1], 'appears':i[2]})
+            for r in g:
+                thrd = round(i[2]/3)
+                if r[2] < 3:
+                    a = 1
+                elif r[2] < thrd:
+                    a = 2
+                else:
+                    a = 3
+                logs[site].append({'word':r[0], 'counted':r[1], 'appears':a})
     return render_template('home.html', logs=logs, sites=sites)
 
 if __name__ == '__main__':

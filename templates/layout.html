@@ -13,22 +13,21 @@
     <div id='main'>
         {% for source in sites %}
         <div class='sitle'>
-	  <h2>{{source}}.com</h2>  <p><i>{{logs[source][0]['cumul']}}</i> words across the <i>{{logs[source][0]['articles']}}</i> latest articles.</p>
-	</div>
+            <h2><a href='http://{{source}}.com'>{{source}}.com</a></h2>  <p><i>{{logs[source][0]['cumul']}}</i> words across the <i>{{logs[source][0]['articles']}}</i> latest articles.</p>
+	    </div>
 	<div class='data'>
-	  <div class='list'>
-	    <ul>
+	    <div class='list'>
+	          <ul>
             {% for word in logs[source][1:2001] %}
             <div class='record group'>
-	      <div class='word reg{{word["appears"]}}'>{{word['word']}}</div> 
-	      <div class='count cou{{word["appears"]}}'>{{word['counted']}}</div>
-	    </div>
+	            <div class='word reg{{word["appears"]}}'>{{word['word']}}</div> 
+		          <div class='count cou{{word["appears"]}}'>{{word['counted']}}</div>
+			      </div>
             {% endfor %}
             </ul>
-	  </div>
-	</div>
+		    </div>
+	    </div>
         {% endfor %}
       </div>
-    </div>
   </body>
 </html>
