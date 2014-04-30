@@ -53,6 +53,7 @@ class ViceRSS(RSSobject):    # Vice Class tailored for vice.com/rss as of March 
         for n, i in enumerate(items):
             i = str(i)
             i = i.replace(r'!', ' ')
+            i = i.replace(r'–', ' ')
             soop = BeautifulSoup(i)
             self.articles.append({})
             self.articles[n]['title'] = soop.title.string
