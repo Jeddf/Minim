@@ -20,7 +20,7 @@ def crawl(offline=0):
             with open('schema.sql', mode='r') as f:
                 curs.executescript(f.read())
     i = []
-    if offline:
+    if offline == 1:
         g = RSSFeed.ViceRSS(None)
         with open("vice.rss", "r") as f:
             g.raw = f.read()
