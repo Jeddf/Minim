@@ -26,8 +26,15 @@ def crawl(offline=0):
             g.raw = f.read()
             g.soup = BeautifulSoup(g.raw)
         i.append(g)
+        g = RSSFeed.VoxRSS(None)
+        with open("index.xml", "r") as f:
+            g.raw = f.read()
+            g.soup = BeautifulSoup(g.raw)
+        i.append(g)
+
     else:
         i.append(RSSFeed.ViceRSS('http://www.vice.com/rss'))
+        i.append(RSSFeed.VoxRSS('http://www.vox.com/rss/index.xml'))
     for t in i:
         t.article_split()
         t.average_words()
@@ -58,7 +65,7 @@ def crawl(offline=0):
 
 @app.route('/')
 def home():
-    sites=['VICE']
+    sites=['VICE', 'VOX']
     logs={}
     with sqlite3.connect('counts.db') as db:
         curs = db.cursor()
@@ -71,7 +78,8 @@ def home():
                                """, ([site]))
             i = curs.fetchall()[0]
             submit_id = i[0]
-            logs[site].append({'cumul':i[1], 'articles':i[2], 'date':i[3]})
+            showratio = int(i[1]/10)
+            logs[site].append({'cumul':i[1], 'articles':i[2], 'date':i[3], 'showratio':showratio})
             curs = db.execute("""SELECT word, count, appears
                                FROM wordage
                                WHERE submitid == ?

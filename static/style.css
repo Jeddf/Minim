@@ -1,3 +1,16 @@
+a {
+  text-decoration: inherit;
+  color: inherit;
+}
+.group:after{
+  visibility:hidden;
+  display:block;
+  content: "";
+  clear: both;
+  height: 0;
+}
+* html .group { zoom: 1; }
+*:first-child+html .group { zoom: 1; }
 body {
   margin: 0;
   font-family:"Open Sans", sans-serif;
@@ -11,6 +24,9 @@ body {
   display:block;
   font-size:0.9em;
 }
+#title-block:hover {
+  color:black;
+}
 h1:after{
 content: ".pw";
 font-size: 0.7em;
@@ -19,23 +35,8 @@ font-size: 0.7em;
   max-width:80%;
   margin:0 auto;
 }
-.word {
-  float:left;
-}
-.count {
-  float:right;
-}
-ul div{
-  display:block;
-}
-.data {
-  width: 100%;
-  margin:0 auto;
-  float:left;
-  background-color: rgb(0, 229, 16);
-  overflow-x: scroll;
-  overflow-y: hidden;
-  height: 260px;
+.sitle {
+  margin-top:1%;
 }
 .sitle h2{
   margin: 0;
@@ -44,13 +45,18 @@ ul div{
   margin-bottom: -4px;
   display: inline-block;
 }
-a {                                                                                                                                                   
-  text-decoration: inherit;
-  color: inherit;
-}
 .sitle p{
     display: inline;
     font-size:0.8em;
+}
+.data {
+  width: 100%;
+  margin:0 auto;
+  background-color: rgb(0, 229, 16);
+  overflow-x: scroll;
+  overflow-y: hidden;
+  height: 260px;
+  display: block;
 }
 .list{
   height: 90%;
@@ -64,8 +70,8 @@ a {
   padding-top: 2%;
   padding-bottom: 1%;
 }
-#title-block:hover {
-  color:black;
+ul div{
+  display:block;
 }
 .record{
   width:90%;
@@ -73,6 +79,12 @@ a {
 }
 .record:hover{
   color:white;
+}
+.word {
+  float:left;
+}
+.count {
+  float:right;
 }
 .reg1:after, .cou1:before{
     content:".";
@@ -86,12 +98,3 @@ a {
     content:"...";
     color:white;
 }
-.group:after{
-  visibility:hidden;
-  display:block;
-  content: "";
-  clear: both;
-  height: 0;
-}
-* html .group { zoom: 1; }
-*:first-child+html .group { zoom: 1; }

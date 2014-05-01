@@ -63,3 +63,19 @@ class ViceRSS(RSSobject):    # Vice Class tailored for vice.com/rss as of March 
             t = t.partition('[CDATA[')[2]
             self.articles[n]['text'] = t.partition('< --')[0]
      source = 'VICE'
+
+class VoxRSS(RSSobject):
+     def article_split(self):
+          items = self.soup.find_all('entry')
+          self.articles = []
+          for n, i in enumerate(items):
+               i = str(i)
+               soop = BeautifulSoup(i)
+               self.articles.append({})
+               self.articles[n]['title'] = soop.title.string
+               self.articles[n]['href'] = soop.id.string
+               self.articles[n]['date'] = soop.updated.string
+               cont = BeautifulSoup(soop.content.string)
+               self.articles[n]['text'] = cont.get_text(" ", strip=True)
+     source = 'VOX'
+     
