@@ -1,4 +1,4 @@
-import sqlite3, Minim, re, string, pdb
+import sqlite3, Minim, re, string
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 
@@ -78,4 +78,35 @@ class VoxRSS(RSSobject):
                cont = BeautifulSoup(soop.content.string)
                self.articles[n]['text'] = cont.get_text(" ", strip=True)
      source = 'VOX'
-     
+
+class BBCRSS(RSSobject):
+     def article_split(self):
+          hinks = self.soup.find_all('link')
+          bad = re.compile(r'(/news/\d|ws/in-pictures)')
+          good = re.compile(r'ws/\S')
+          links = []
+          while hinks:
+               a = hinks.pop()
+               a = a.string
+               a = a.partition('#')[0]
+               a = a.replace('//www.', '//m.')
+               if bad.search(a):
+                    pass
+               elif good.search(a):
+                    links.append(a)
+          big = " "
+          self.articles=[]
+          for n, href in enumerate(links):
+               b = urlopen(href)
+               r = b.read()
+               p = BeautifulSoup(r)
+               self.articles.append({})
+               self.articles[n]['title'] = p.h1.string
+               self.articles[n]['href'] = links[n]
+               self.articles[n]['date'] = p.find(class_="date").string
+               e = p.find(class_='story-inner')
+               tex = e.find_all('p') + e.find_all('ul')
+               self.articles[n]['text'] = ""
+               for h in tex[1:]:
+                    self.articles[n]['text'] += " "+h.get_text()
+     source = 'BBCNEWS'
