@@ -4,6 +4,7 @@
 
 ##### Currently works for:
 * VICE.com
+* VOX.com
 
 ##### Instructions
 * 'python3 Minim.py' to run flask app server
