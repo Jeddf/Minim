@@ -21,18 +21,22 @@ def crawl(offline=0):
                 curs.executescript(f.read())
     i = []
     if offline == 1:
-        g = RSSFeed.ViceRSS(None)
-        with open("vice.rss", "r") as f:
-            g.raw = f.read()
-            g.soup = BeautifulSoup(g.raw)
-        i.append(g)
-        g = RSSFeed.VoxRSS(None)
+        vice = RSSFeed.ViceRSS(None)
+        with open("vice.xml", "r") as f:
+            vice.raw = f.read()
+            vice.soup = BeautifulSoup(vice.raw)
+        i.append(vice)
+        vox = RSSFeed.VoxRSS(None)
         with open("index.xml", "r") as f:
-            g.raw = f.read()
-            g.soup = BeautifulSoup(g.raw)
-        i.append(g)
-
+            vox.raw = f.read()
+            vox.soup = BeautifulSoup(vox.raw)
+        i.append(vox)
+        with open("bbcus.xml") as f:
+            bbc.raw = f.read()
+            bbc.soup = BeautifulSoup(bbc.raw)
+        i.append(bbc)
     else:
+        i.append(RSSFeed.BBCRSS('http://feeds.bbci.co.uk/news/rss.xml?edition=us'))
         i.append(RSSFeed.ViceRSS('http://www.vice.com/rss'))
         i.append(RSSFeed.VoxRSS('http://www.vox.com/rss/index.xml'))
     for t in i:
@@ -65,7 +69,7 @@ def crawl(offline=0):
 
 @app.route('/')
 def home():
-    sites=['VICE', 'VOX']
+    sites=['BBCNEWS', 'VICE', 'VOX']
     logs={}
     with sqlite3.connect('counts.db') as db:
         curs = db.cursor()
