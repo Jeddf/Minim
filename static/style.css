@@ -28,7 +28,7 @@ body {
   color:black;
 }
 h1:after{
-content: ".pw";
+content: ".li";
 font-size: 0.7em;
 }
 #main {
@@ -46,8 +46,11 @@ font-size: 0.7em;
   display: inline-block;
 }
 .sitle p{
-    display: inline;
-    font-size:0.8em;
+  display: inline;
+  font-size:0.8em;
+}
+.source {
+  float: right;
 }
 .data {
   width: 100%;
@@ -87,14 +90,19 @@ ul div{
   float:right;
 }
 .reg1:after, .cou1:before{
-    content:".";
-    color:white;
+  content:".";
+  color:white;
 }
 .reg2:after, .cou2:before{
-    content:"..";
-    color:white;
+  content:"..";
+  color:white;
 }
 .reg3:after, .cou3:before{
-    content:"...";
-    color:white;
+  content:"...";
+  color:white;
+}
+footer {
+  text-align: center;
+  margin-top: 4%;
+  font-size: 0.7em;
 }

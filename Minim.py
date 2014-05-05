@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 app.config.update(dict(
     DATABASE=os.path.join(app.root_path, 'counts.db'),
-    DEBUG=True,
+    DEBUG=False,
 ))
 app.config.from_envvar('FLASKR_SETTINGS', silent=True)
 
@@ -42,6 +42,10 @@ def crawl(offline=0):
     for t in i:
         t.article_split()
         t.average_words()
+        if t.url:
+            url = t.url
+        else:
+            url = 'http://google.com'
         with sqlite3.connect('counts.db') as db:
             curs = db.cursor()
             if curs.execute("""
@@ -51,10 +55,10 @@ def crawl(offline=0):
                 return 'Already populated today.'
             else:
                 curs.execute("""
-                                INSERT into submits (source, cumul, articles, date)
-                                VALUES(?, ?, ?, date('now')
+                                INSERT into submits (source, cumul, articles, url, date)
+                                VALUES(?, ?, ?, ?, date('now')
                                 );"""
-                            , (t.source, t.cumul, len(t.articles)))
+                            , (t.source, t.cumul, len(t.articles), url))
                 for a in t.averages:
                     x=0
                     for r in t.articles:
@@ -75,7 +79,7 @@ def home():
         curs = db.cursor()
         for site in sites:
             logs[site]=[]
-            curs = db.execute("""SELECT id, cumul, articles, date
+            curs = db.execute("""SELECT id, cumul, articles, url, date
                                FROM submits
                                WHERE id ==
                                (SELECT MAX(id) from submits WHERE source=?)
@@ -83,7 +87,7 @@ def home():
             i = curs.fetchall()[0]
             submit_id = i[0]
             showratio = int(i[1]/10)
-            logs[site].append({'cumul':i[1], 'articles':i[2], 'date':i[3], 'showratio':showratio})
+            logs[site].append({'cumul':i[1], 'articles':i[2], 'date':i[4], 'showratio':showratio, 'url':i[3]})
             curs = db.execute("""SELECT word, count, appears
                                FROM wordage
                                WHERE submitid == ?

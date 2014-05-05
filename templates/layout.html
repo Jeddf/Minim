@@ -3,6 +3,7 @@
   <head>
     <title>MINIM</title>
     <link rel='stylesheet' type = 'text/css' href="{{ url_for('static', filename='style.css') }}">
+    <link rel="shortcut icon" href="{{url_for('static', filename='favicon.ico') }}">
   </head>
   <body class='group'>
   <div id='title-block'>
@@ -12,5 +13,8 @@
   </div>
   {% block main %}
   {% endblock %}
+  <footer>
+    <p>...minim.li has no affiliation with mentioned websites...</p>
+  </footer>
   </body>
 </html>

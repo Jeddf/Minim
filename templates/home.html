@@ -4,7 +4,7 @@
       {% for source in sites %}
       <div class='sitle'>
         <h2><a href='http://{{source}}.com' target='_blank'>{{source}}.com</a></h2>  
-        <p><i>{{logs[source][0]['cumul']}}</i> words across the <i>{{logs[source][0]['articles']}}</i> latest articles.</p>
+        <p><i>{{logs[source][0]['cumul']}}</i> words across the <i>{{logs[source][0]['articles']}}</i> latest articles.<!-- a href='{{logs[source][0]["url"]}}' target='blank' class='source'> source</a --></p>
       </div>
       <div class='data'>
         <div class='list'>

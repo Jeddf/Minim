@@ -16,6 +16,7 @@ class RSSobject(object):
                t = urlopen(url)
                self.raw = t.read()
                self.soup = BeautifulSoup(self.raw)
+               self.url = url
           self.borings = []
           for f in ["conjunctions", "prepositions", "determiners", "pronouns", "otherborings"]:
                with open("static/{}.csv".format(f), "r") as h:
