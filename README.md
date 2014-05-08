@@ -8,5 +8,5 @@
 * VOX.com (http://vox.com/rss/index.xml)
 
 ##### Instructions
-* run 'Minim.crawl(0)' in python3 console to initiate DB and crawl for data.
+* run 'Minim.crawl()' in python3 console to initiate DB and crawl for data.
 * 'python3 Minim.py' to run flask app server
