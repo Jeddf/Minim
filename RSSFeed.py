@@ -81,12 +81,12 @@ class VoxRSS(RSSobject):
      source = 'VOX'
 
 class BBCRSS(RSSobject):
-     def article_split(self):
+     def article_split(self, maxart=80):
           hinks = self.soup.find_all('link')
           bad = re.compile(r'(/news/\d|ws/in-pictures)')
           good = re.compile(r'ws/\S')
           links = []
-          while hinks:
+          while hinks and (len(links) < maxart):
                a = hinks.pop()
                a = a.string
                a = a.partition('#')[0]
