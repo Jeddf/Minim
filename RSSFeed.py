@@ -46,8 +46,7 @@ class RSSobject(object):
                          self.articles[x][t] = 1
                self.cumul = sum(self.averages.values())
                
-class ViceRSS(RSSobject):    # Vice Class tailored for vice.com/rss as of March 2014, returns 50 latest.
-
+class ViceRSS(RSSobject):    # Vice Class tailored for vice.com/rss as of May 2014.
      def article_split(self):
         items = self.soup.find_all('item')
         self.articles = []
@@ -65,7 +64,7 @@ class ViceRSS(RSSobject):    # Vice Class tailored for vice.com/rss as of March 
             self.articles[n]['text'] = t.partition('< --')[0]
      source = 'VICE'
 
-class VoxRSS(RSSobject):
+class VoxRSS(RSSobject):    # Vox Class tailored for vox.com/rss/index.xml as of May 2014
      def article_split(self):
           items = self.soup.find_all('entry')
           self.articles = []
@@ -80,7 +79,7 @@ class VoxRSS(RSSobject):
                self.articles[n]['text'] = cont.get_text(" ", strip=True)
      source = 'VOX'
 
-class BBCRSS(RSSobject):
+class BBCRSS(RSSobject):    # BBCNews Class tailored for feeds.bbci.co.uk/news/rss.xml as of May 2014
      def article_split(self):
           hinks = self.soup.find_all('link')
           bad = re.compile(r'(/news/\d|ws/in-pictures)')
@@ -106,7 +105,15 @@ class BBCRSS(RSSobject):
                self.articles[n]['href'] = links[n]
                self.articles[n]['date'] = p.find(class_="date").string
                e = p.find(class_='story-inner')
-               tex = e.find_all('p') + e.find_all('ul')
+               try:
+                    tex = e.find_all('p') + e.find_all('ul')
+               except AttributeError:
+                    try:
+                         e = p.find(class_='picture-gallery')
+                         tex = e.find_all('p')
+                    except AttributeError:
+                         self.article[n]['text'] = "picture"
+                         continue
                self.articles[n]['text'] = ""
                for h in tex[1:]:
                     self.articles[n]['text'] += " "+h.get_text()
