@@ -103,7 +103,10 @@ class BBCRSS(RSSobject):    # BBCNews Class tailored for feeds.bbci.co.uk/news/r
                self.articles.append({})
                self.articles[n]['title'] = p.h1.string
                self.articles[n]['href'] = links[n]
-               self.articles[n]['date'] = p.find(class_="date").string
+               if p.find(class_="date"):
+                    self.articles[n]['date'] = p.find(class_="date").string
+               else:
+                    self.articles[n]['date'] = " "
                e = p.find(class_='story-inner')
                try:
                     tex = e.find_all('p') + e.find_all('ul')
