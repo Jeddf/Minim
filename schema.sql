@@ -1,9 +1,10 @@
 CREATE TABLE submits(
        id INTEGER PRIMARY KEY NOT NULL, 
-       source TEXT,
+       sitename TEXT,
        cumul NUMBER,
        articles NUMBER,
-       url TEXT, 
+       sitefeed TEXT,
+       sitehome TEXT, 
        date TEXT
 );
 
