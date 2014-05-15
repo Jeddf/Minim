@@ -1,15 +1,15 @@
 {% extends "layout.html" %}
 {% block main %}
     <div id='main'>
-      {% for source in sites %}
+      {% for sitename in sites %}
       <div class='sitle'>
-        <h2><a href='http://{{source}}.com' target='_blank'>{{source}}.com</a></h2>  
-        <p><i>{{logs[source][0]['cumul']}}</i> words across the <i>{{logs[source][0]['articles']}}</i> latest articles.<!-- a href='{{logs[source][0]["url"]}}' target='blank' class='source'> source</a --></p>
+        <h2><a href="{{logs[sitename][0]['sitehome']}}" target='_blank'>{{sitename}}</a></h2>  
+        <p><i>{{logs[sitename][0]['cumul']}}</i> words across the <i>{{logs[sitename][0]['articles']}}</i> latest articles.</p>
       </div>
       <div class='data'>
         <div class='list'>
           <ul>
-            {% for word in logs[source][1:logs[source][0]['showratio']]%}
+            {% for word in logs[sitename][1:logs[sitename][0]['showratio']]%}
             <div class='record group'>
               <div class='word reg{{word["appears"]}}'>{{word['word']}}</div> 
     	      <div class='count cou{{word["appears"]}}'>{{word['counted']}}</div>

@@ -6,14 +6,19 @@
     <link rel="shortcut icon" href="{{url_for('static', filename='favicon.ico') }}">
   </head>
   <body class='group'>
-  <div id='title-block'>
+  <div id='title-block' class='group'>
     <div>
       <h1>MINIM</h1>
+      <a href='#about'><h2 id='info'>?</h2></a>
     </div>
   </div>
   {% block main %}
   {% endblock %}
   <footer>
+    <a name='about'></a>
+    <div><p>
+      Refreshed on {{logs['Vice'][0]['date']}} from the folowing feeds: <br>{% for sitename in sites %} <a href='{{logs[sitename][0]['sitefeed']}}' target='_blank'>{{sitename}}</a><br>{% endfor %}Go behind the scenes at <a href='https://github.com/Jeddf/Minim' target='_blank'>Github.com/Jeddf/Minim</a> to see which words I thought were boring and how the site works.<br>
+    </div></p>
     <p>...minim.li has no affiliation with mentioned websites...</p>
   </footer>
   </body>
