@@ -13,26 +13,32 @@ a {
 *:first-child+html .group { zoom: 1; }
 body {
   margin: 0;
+  margin-left: 10%;
   font-family:"Open Sans", sans-serif;
   cursor: default;
   overflow: auto;
+  width: 80%;
 }
 #title-block {
-  color: blue;
-  max-width:80%;
+  width:100%;
   margin:0 auto;
   display:block;
   font-size:0.9em;
 }
-#title-block:hover {
-  color:black;
+#title-block h1 {
+    display: inline;
+    float:left;
+}
+#title-block h2 {
+    display: inline;
+    float: right;
 }
 h1:after{
 content: ".li";
 font-size: 0.7em;
 }
 #main {
-  max-width:80%;
+  width:100%;
   margin:0 auto;
 }
 .sitle {
@@ -42,7 +48,7 @@ font-size: 0.7em;
   margin: 0;
   padding-left: 1em;
   padding-top: 10px;
-  margin-bottom: -4px;
+  margin-bottom: 0;
   display: inline-block;
 }
 .sitle p{
@@ -105,4 +111,10 @@ footer {
   text-align: center;
   margin-top: 4%;
   font-size: 0.7em;
+}
+footer div {
+    margin-bottom: 40px;
+}
+footer div a {
+    font-weight: bold;
 }

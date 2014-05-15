@@ -11,12 +11,14 @@ class RSSobject(object):
            borings (list of strings): collected words to exclude
     """
 
-     def __init__(self, url):
-          if url:
-               t = urlopen(url)
+     def __init__(self, sitefeed):
+          if sitefeed:
+               t = urlopen(sitefeed)
                self.raw = t.read()
                self.soup = BeautifulSoup(self.raw)
-               self.url = url
+               self.sitefeed = sitefeed
+          else:
+               self.sitefeed = 'http://google.com'
           self.borings = []
           for f in ["conjunctions", "prepositions", "determiners", "pronouns", "otherborings"]:
                with open("static/{}.csv".format(f), "r") as h:
@@ -46,26 +48,30 @@ class RSSobject(object):
                          self.articles[x][t] = 1
                self.cumul = sum(self.averages.values())
                
-class ViceRSS(RSSobject):    # Vice Class tailored for vice.com/rss as of May 2014.
-     def article_split(self):
-        items = self.soup.find_all('item')
-        self.articles = []
-        for n, i in enumerate(items):
-            i = str(i)
-            i = i.replace(r'!', ' ')
-            i = i.replace(r'–', ' ')
-            soop = BeautifulSoup(i)
-            self.articles.append({})
-            self.articles[n]['title'] = soop.title.string
-            self.articles[n]['href'] = soop.link.string
-            self.articles[n]['date'] = soop.pubdate.string
-            t = soop.get_text(" ", strip=True)
-            t = t.partition('[CDATA[')[2]
-            self.articles[n]['text'] = t.partition('< --')[0]
-     source = 'VICE'
+class ViceRSS(RSSobject):    # Vice Class tailored for vice.com/rss as of March 2014, returns 50 latest.
 
-class VoxRSS(RSSobject):    # Vox Class tailored for vox.com/rss/index.xml as of May 2014
-     def article_split(self):
+     def article_split(self, sitename='Vice', sitehome='http://vice.com'):
+          self.sitename = sitename
+          self.sitehome = sitehome
+          items = self.soup.find_all('item')
+          self.articles = []
+          for n, i in enumerate(items):
+               i = str(i)
+               i = i.replace(r'!', ' ')
+               i = i.replace(r'–', ' ')
+               soop = BeautifulSoup(i)
+               self.articles.append({})
+               self.articles[n]['title'] = soop.title.string
+               self.articles[n]['href'] = soop.link.string
+               self.articles[n]['date'] = soop.pubdate.string
+               t = soop.get_text(" ", strip=True)
+               t = t.partition('[CDATA[')[2]
+               self.articles[n]['text'] = t.partition('< --')[0]
+
+class VoxRSS(RSSobject):
+     def article_split(self, sitename='Vox', sitehome='http://vox.com'):
+          self.sitename = sitename
+          self.sitehome = sitehome
           items = self.soup.find_all('entry')
           self.articles = []
           for n, i in enumerate(items):
@@ -77,10 +83,11 @@ class VoxRSS(RSSobject):    # Vox Class tailored for vox.com/rss/index.xml as of
                self.articles[n]['date'] = soop.updated.string
                cont = BeautifulSoup(soop.content.string)
                self.articles[n]['text'] = cont.get_text(" ", strip=True)
-     source = 'VOX'
 
-class BBCRSS(RSSobject):    # BBCNews Class tailored for feeds.bbci.co.uk/news/rss.xml as of May 2014
-     def article_split(self):
+class BBCRSS(RSSobject):
+     def article_split(self, sitename='BBC News US', sitehome='http://bbc.co.uk/news'):
+          self.sitename = sitename
+          self.sitehome = sitehome
           hinks = self.soup.find_all('link')
           bad = re.compile(r'(/news/\d|ws/in-pictures)')
           good = re.compile(r'ws/\S')
@@ -108,16 +115,17 @@ class BBCRSS(RSSobject):    # BBCNews Class tailored for feeds.bbci.co.uk/news/r
                else:
                     self.articles[n]['date'] = " "
                e = p.find(class_='story-inner')
-               try:
+               f = p.find(class_='story-body')
+               g = p.find(class_='picture-gallery')
+               if e:
                     tex = e.find_all('p') + e.find_all('ul')
-               except AttributeError:
-                    try:
-                         e = p.find(class_='picture-gallery')
-                         tex = e.find_all('p')
-                    except AttributeError:
-                         self.article[n]['text'] = "picture"
-                         continue
+               if f:
+                    tex = f.find_all('p')
+               if g:
+                    tex = g.find_all('p')
                self.articles[n]['text'] = ""
-               for h in tex[1:]:
-                    self.articles[n]['text'] += " "+h.get_text()
-     source = 'BBCNEWS'
+               try:
+                    for h in tex[1:]:
+                         self.articles[n]['text'] += " "+h.get_text()
+               except NameError:
+                    self.articles[n]['text'] += "{}fail".format(links[n][-8:])

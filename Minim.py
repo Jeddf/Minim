@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 app.config.update(dict(
     DATABASE=os.path.join(app.root_path, 'counts.db'),
-    DEBUG=False,
+    DEBUG=True,
 ))
 app.config.from_envvar('FLASKR_SETTINGS', silent=True)
 
@@ -31,10 +31,11 @@ def crawl(offline=0):
             vox.raw = f.read()
             vox.soup = BeautifulSoup(vox.raw)
         i.append(vox)
+        bbcus = RSSFeed.BBCRSS(None)
         with open("bbcus.xml") as f:
-            bbc.raw = f.read()
-            bbc.soup = BeautifulSoup(bbc.raw)
-        i.append(bbc)
+            bbcus.raw = f.read()
+            bbcus.soup = BeautifulSoup(bbcus.raw)
+        i.append(bbcus)
     else:
         i.append(RSSFeed.BBCRSS('http://feeds.bbci.co.uk/news/rss.xml?edition=us'))
         i.append(RSSFeed.ViceRSS('http://www.vice.com/rss'))
@@ -42,23 +43,19 @@ def crawl(offline=0):
     for t in i:
         t.article_split()
         t.average_words()
-        if t.url:
-            url = t.url
-        else:
-            url = 'http://google.com'
         with sqlite3.connect('counts.db') as db:
             curs = db.cursor()
             if curs.execute("""
-                        SELECT source FROM submits
-                        WHERE source = ? AND date=date('now')
-                        ;""", ([t.source])).fetchall():
-                return 'Already populated today.'
+                        SELECT sitename FROM submits
+                        WHERE sitename = ? AND date=date('now')
+                        ;""", ([t.sitename])).fetchall():
+                return '{} already populated today.'.format(t.sitename)
             else:
                 curs.execute("""
-                                INSERT into submits (source, cumul, articles, url, date)
-                                VALUES(?, ?, ?, ?, date('now')
+                                INSERT into submits (sitename, cumul, articles, sitefeed, date, sitehome)
+                                VALUES(?, ?, ?, ?, date('now'), ?
                                 );"""
-                            , (t.source, t.cumul, len(t.articles), url))
+                            , (t.sitename, t.cumul, len(t.articles), t.sitefeed, t.sitehome))
                 for a in t.averages:
                     x=0
                     for r in t.articles:
@@ -67,27 +64,27 @@ def crawl(offline=0):
                     curs.execute("""
                              INSERT into wordage (word, count, appears, submitid)
                              VALUES(?, ?, ?, (SELECT id FROM submits
-                             WHERE source=? AND date=date('now')))
-                             ;""", (a, t.averages[a], x, t.source))
+                             WHERE sitename=? AND date=date('now')))
+                             ;""", (a, t.averages[a], x, t.sitename))
     return 'Refreshed.'
 
 @app.route('/')
 def home():
-    sites=['BBCNEWS', 'VICE', 'VOX']
+    sites=['BBC News US', 'Vice', 'Vox']
     logs={}
     with sqlite3.connect('counts.db') as db:
         curs = db.cursor()
         for site in sites:
             logs[site]=[]
-            curs = db.execute("""SELECT id, cumul, articles, url, date
+            curs = db.execute("""SELECT id, cumul, articles, sitefeed, date, sitehome
                                FROM submits
                                WHERE id ==
-                               (SELECT MAX(id) from submits WHERE source=?)
+                               (SELECT MAX(id) from submits WHERE sitename=?)
                                """, ([site]))
             i = curs.fetchall()[0]
             submit_id = i[0]
             showratio = int(i[1]/10)
-            logs[site].append({'cumul':i[1], 'articles':i[2], 'date':i[4], 'showratio':showratio, 'url':i[3]})
+            logs[site].append({'cumul':i[1], 'articles':i[2], 'date':i[4], 'showratio':showratio, 'sitefeed':i[3], 'sitehome':i[5]})
             curs = db.execute("""SELECT word, count, appears
                                FROM wordage
                                WHERE submitid == ?
