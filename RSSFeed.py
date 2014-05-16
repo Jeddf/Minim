@@ -106,26 +106,32 @@ class BBCRSS(RSSobject):
           for n, href in enumerate(links):
                b = urlopen(href)
                r = b.read()
-               p = BeautifulSoup(r)
-               self.articles.append({})
-               self.articles[n]['title'] = p.h1.string
-               self.articles[n]['href'] = links[n]
-               if p.find(class_="date"):
-                    self.articles[n]['date'] = p.find(class_="date").string
-               else:
-                    self.articles[n]['date'] = " "
-               e = p.find(class_='story-inner')
-               f = p.find(class_='story-body')
-               g = p.find(class_='picture-gallery')
-               if e:
-                    tex = e.find_all('p') + e.find_all('ul')
-               if f:
-                    tex = f.find_all('p')
-               if g:
-                    tex = g.find_all('p')
-               self.articles[n]['text'] = ""
-               try:
-                    for h in tex[1:]:
-                         self.articles[n]['text'] += " "+h.get_text()
-               except NameError:
-                    self.articles[n]['text'] += "{}fail".format(links[n][-8:])
+               self.articles.append(self.page_parse(r))
+               self.articles[n]['href'] = href
+     def page_parse(self, r):
+          p = BeautifulSoup(r)
+          article={}
+          article['title'] = p.h1.get_text()
+          if p.find(class_="date"):
+               article['date'] = p.find(class_="date").get_text().strip()[0:11]
+          else:
+               article['date'] = " "
+          d = p.find(class_='map-body')
+          e = p.find(class_='story-inner')
+          f = p.find(class_='story-body')
+          g = p.find(class_='picture-gallery')
+          if f:
+               tex = f.find_all('p') + f.find_all('ul')
+          elif d:
+               tex = d.find_all('p') + e.find_all('ul')
+          elif e:
+               tex = e.find_all('p') + e.find_all('ul')
+          elif g:
+               tex = g.find_all('p')
+          article['text'] = ""
+          try:
+               for h in tex:
+                    article['text'] += " "+h.get_text()
+          except NameError:
+               article['text'] += "{}fail".format(links[n][-8:])
+          return article
