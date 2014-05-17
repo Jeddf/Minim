@@ -1,4 +1,4 @@
-import sqlite3, Minim, re, string
+import sqlite3, Minim, re, string, pdb
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 
@@ -131,6 +131,11 @@ class BBCRSS(RSSobject):
           article['text'] = ""
           try:
                for h in tex:
+                    try:
+                         if 'date' in h['class']:
+                              continue
+                    except KeyError:
+                         pass
                     article['text'] += " "+h.get_text()
           except NameError:
                article['text'] += "{}fail".format(links[n][-8:])
