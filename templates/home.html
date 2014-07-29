@@ -11,8 +11,18 @@
           <ul>
             {% for word in logs[sitename][1:logs[sitename][0]['showratio']]%}
             <div class='record group'>
-              <div class='word reg{{word["appears"]}}'>{{word['word']}}</div> 
-    	      <div class='count cou{{word["appears"]}}'>{{word['counted']}}</div>
+              {% if word["appears"] == 1 %}
+              <div class='word reg{{word["appears"]}}' title='in 1 or 2 {{sitename}} articles'>{{word['word']}}</div> 
+    	        <div class='count cou{{word["appears"]}}' title='in 1 or 2 {{sitename}} articles'>{{word['counted']}}</div>
+              {% endif %}
+              {% if word["appears"] == 2 %}
+              <div class='word reg{{word["appears"]}}' title='in < a third of {{sitename}} articles'>{{word['word']}}</div> 
+              <div class='count cou{{word["appears"]}}' title='in < a third of {{sitename}} articles'>{{word['counted']}}</div>
+              {% endif %}
+              {% if word["appears"] == 3 %}
+              <div class='word reg{{word["appears"]}}' title='in > a third of {{sitename}} articles'>{{word['word']}}</div> 
+              <div class='count cou{{word["appears"]}}' title='in > a third of {{sitename}} articles'>{{word['counted']}}</div>
+              {% endif %}
     	    </div>
             {% endfor %}
           </ul>
