@@ -12,6 +12,8 @@ app.config.update(dict(
 ))
 app.config.from_envvar('FLASKR_SETTINGS', silent=True)
 
+sites=['BBC News US', 'BBC News UK', 'Vice', 'Vox']
+
 @app.route('/refresh/<offline>')
 def crawl(offline=0):
     if not os.path.isfile("counts.db"):
@@ -38,10 +40,11 @@ def crawl(offline=0):
         i.append(bbcus)
     else:
         i.append(RSSFeed.BBCRSS('http://feeds.bbci.co.uk/news/rss.xml?edition=us'))
+        i.append(RSSFeed.BBCRSS('http://feeds.bbci.co.uk/news/rss.xml?edition=uk'))
         i.append(RSSFeed.ViceRSS('http://www.vice.com/rss'))
         i.append(RSSFeed.VoxRSS('http://www.vox.com/rss/index.xml'))
-    for t in i:
-        t.article_split()
+    for n, t in enumerate(i):
+        t.article_split(sitename=sites[n])
         t.average_words()
         with sqlite3.connect('counts.db') as db:
             curs = db.cursor()
@@ -70,7 +73,6 @@ def crawl(offline=0):
 
 @app.route('/')
 def home():
-    sites=['BBC News US', 'Vice', 'Vox']
     logs={}
     with sqlite3.connect('counts.db') as db:
         curs = db.cursor()
