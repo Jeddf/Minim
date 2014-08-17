@@ -3,26 +3,33 @@
     <div id='main'>
       {% for sitename in sites %}
       <div class='sitle'>
-        <h2><a href="{{logs[sitename][0]['sitehome']}}" target='_blank'>{{sitename}}</a></h2>  
-        <p><i>{{logs[sitename][0]['cumul']}}</i> words across the <i>{{logs[sitename][0]['articles']}}</i> latest articles.</p>
+        <h2><a href="{{logs[sitename]['data']['sitehome']}}" target='_blank'>{{sitename}}</a></h2>  
+        <p><i>{{logs[sitename]['data']['cumul']}}</i> words across the <i>{{logs[sitename]['data']['articles']}}</i> latest articles.</p>
       </div>
       <div class='data'>
         <div class='list'>
           <ul>
-            {% for word in logs[sitename][1:logs[sitename][0]['showratio']]%}
+            {% for word in logs[sitename]['words'][:logs[sitename]['data']['showratio']]%}
             <div class='record group'>
+	      {% set h = logs[sitename]['articles'][word["max_article"]]["href"] %}
               {% if word["appears"] == 1 %}
-              <div class='word reg{{word["appears"]}}' title='in 1 or 2 {{sitename}} articles'>{{word['word']}}</div> 
-    	        <div class='count cou{{word["appears"]}}' title='in 1 or 2 {{sitename}} articles'>{{word['counted']}}</div>
-              {% endif %}
+	      <a href='{{h}}' target='_blank'>
+		<div class='word reg{{word["appears"]}}' title='in 1 or 2 {{sitename}} articles'>{{word['word']}}</div> 
+    		<div class='count cou{{word["appears"]}}' title='in 1 or 2 {{sitename}} articles'>{{word['counted']}}</div>
+              </a>
+	      {% endif %}
               {% if word["appears"] == 2 %}
-              <div class='word reg{{word["appears"]}}' title='in < a third of {{sitename}} articles'>{{word['word']}}</div> 
-              <div class='count cou{{word["appears"]}}' title='in < a third of {{sitename}} articles'>{{word['counted']}}</div>
-              {% endif %}
+              <a href='{{h}}' target='_blank'>
+		<div class='word reg{{word["appears"]}}' title='in < a third of {{sitename}} articles'>{{word['word']}}</div> 
+		<div class='count cou{{word["appears"]}}' title='in < a third of {{sitename}} articles'>{{word['counted']}}</div>
+              </a>
+	      {% endif %}
               {% if word["appears"] == 3 %}
-              <div class='word reg{{word["appears"]}}' title='in > a third of {{sitename}} articles'>{{word['word']}}</div> 
-              <div class='count cou{{word["appears"]}}' title='in > a third of {{sitename}} articles'>{{word['counted']}}</div>
-              {% endif %}
+	      <a href='{{h}}' target='_blank'>
+		<div class='word reg{{word["appears"]}}' title='in > a third of {{sitename}} articles'>{{word['word']}}</div> 
+		<div class='count cou{{word["appears"]}}' title='in > a third of {{sitename}} articles'>{{word['counted']}}</div>
+              </a>
+	      {% endif %}
     	    </div>
             {% endfor %}
           </ul>

@@ -41,12 +41,17 @@ class RSSobject(object):
                               continue
                          if t == "":
                               continue
-                         elif t in self.averages:
+                         if t in self.averages:
                               self.averages[t] += 1
+                              if t in self.articles[x]:
+                                   self.articles[x][t] += 1
+                              else:
+                                   self.articles[x][t] = 1
+                         
                          else:
                               self.averages[t] = 1
-                         self.articles[x][t] = 1
-               self.cumul = sum(self.averages.values())
+                              self.articles[x][t] = 1
+               self.cumul = len(self.averages)
                
 class ViceRSS(RSSobject):    # Vice Class tailored for vice.com/rss as of March 2014, returns 50 latest.
 

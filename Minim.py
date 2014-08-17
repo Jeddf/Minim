@@ -1,3 +1,4 @@
+import pdb
 from bs4 import BeautifulSoup
 from flask import Flask, url_for, render_template, g
 import os
@@ -5,6 +6,8 @@ import sqlite3
 import RSSFeed
 
 app = Flask(__name__)
+
+i = []
 
 app.config.update(dict(
     DATABASE=os.path.join(app.root_path, 'counts.db'),
@@ -48,27 +51,33 @@ def crawl(offline=0):
         t.average_words()
         with sqlite3.connect('counts.db') as db:
             curs = db.cursor()
-            if curs.execute("""
-                        SELECT sitename FROM submits
-                        WHERE sitename = ? AND date=date('now')
-                        ;""", ([t.sitename])).fetchall():
-                return '{} already populated today.'.format(t.sitename)
-            else:
-                curs.execute("""
+            curs.execute("""
                                 INSERT into submits (sitename, cumul, articles, sitefeed, date, sitehome)
                                 VALUES(?, ?, ?, ?, date('now'), ?
                                 );"""
-                            , (t.sitename, t.cumul, len(t.articles), t.sitefeed, t.sitehome))
-                for a in t.averages:
-                    x=0
-                    for r in t.articles:
-                        if a in r:
-                                x += 1
-                    curs.execute("""
-                             INSERT into wordage (word, count, appears, submitid)
-                             VALUES(?, ?, ?, (SELECT id FROM submits
-                             WHERE sitename=? AND date=date('now')))
-                             ;""", (a, t.averages[a], x, t.sitename))
+                         , (t.sitename, t.cumul, len(t.articles), t.sitefeed, t.sitehome))
+            for a in t.averages:
+                x=0
+                max_freq=0
+                appear=0
+                for u, r in enumerate(t.articles):
+                    if a in r:
+                        if r[a] > appear:
+                            max_freq=u
+                            appear = r[a]
+                        x += 1
+                curs.execute("""
+                             INSERT into wordage (word, count, appears, max_article, submitid)
+                             VALUES(?, ?, ?, ?,(SELECT MAX(id) FROM submits
+                             WHERE sitename=?))
+                             ;""", (a, t.averages[a], x, max_freq, t.sitename))
+                max_freq=0
+                appear=0
+            for u, r in enumerate(t.articles):
+                curs.execute("""
+                             INSERT into articles (submitid, id, href, title, body)
+                             VALUES((SELECT MAX(id) FROM submits WHERE sitename=?), ?, ?, ?, ?)
+                             ;""", (t.sitename, u, r['href'], r['title'], r['text']))
     return 'Refreshed.'
 
 @app.route('/')
@@ -77,7 +86,8 @@ def home():
     with sqlite3.connect('counts.db') as db:
         curs = db.cursor()
         for site in sites:
-            logs[site]=[]
+            logs[site] = {}
+            logs[site]['data'] = []
             curs = db.execute("""SELECT id, cumul, articles, sitefeed, date, sitehome
                                FROM submits
                                WHERE id ==
@@ -86,14 +96,15 @@ def home():
             i = curs.fetchall()[0]
             submit_id = i[0]
             showratio = int(i[1]/10)
-            logs[site].append({'cumul':i[1], 'articles':i[2], 'date':i[4], 'showratio':showratio, 'sitefeed':i[3], 'sitehome':i[5]})
-            curs = db.execute("""SELECT word, count, appears
+            logs[site]['data'] = {'cumul':i[1], 'articles':i[2], 'date':i[4], 'showratio':showratio, 'sitefeed':i[3], 'sitehome':i[5]}
+            curs = db.execute("""SELECT word, count, appears, max_article
                                FROM wordage
                                WHERE submitid == ?
                                ORDER BY count DESC
                               """, ([submit_id]))
-            g = curs.fetchall()
-            for r in g:
+            l = curs.fetchall()
+            logs[site]['words'] = []
+            for r in l:
                 thrd = round(i[2]/3)
                 if r[2] < 3:
                     a = 1
@@ -101,7 +112,16 @@ def home():
                     a = 2
                 else:
                     a = 3
-                logs[site].append({'word':r[0], 'counted':r[1], 'appears':a})
+                logs[site]['words'].append({'word':r[0], 'counted':r[1], 'max_article':r[3], 'appears':a})
+            logs[site]['articles'] = []
+            curs = db.execute("""SELECT id, href, title
+                                 FROM articles
+                                 WHERE submitid == ?
+                                 ORDER BY id ASC
+                              """, ([submit_id]))
+            l = curs.fetchall()
+            for r in l:
+                logs[site]['articles'].append({'id':r[0], 'href':r[1], 'title':r[2]})
     return render_template('home.html', logs=logs, sites=sites)
 
 if __name__ == '__main__':
