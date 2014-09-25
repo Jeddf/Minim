@@ -72,10 +72,12 @@ font-size: 0.7em;
   min-width: 940px;
   -webkit-column-count: 4;
   -moz-column-count: 4;
+  -ms-column-count: 4;
   column-count: 4;
   column-gap: 0;
   -webkit-column-gap: 0;
   -moz-column-gap: 0;
+  -ms-column-gap: 0;
   padding-top: 2%;
   padding-bottom: 1%;
 }

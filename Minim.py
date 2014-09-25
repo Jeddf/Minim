@@ -1,23 +1,28 @@
+#!/home/orangey/venvs/minim/bin/python
 import pdb
 from bs4 import BeautifulSoup
 from flask import Flask, url_for, render_template, g
 import os
 import sqlite3
 import RSSFeed
+from flask_frozen import Freezer
 
-app = Flask(__name__)
+app = Flask('Minim.py')
+
+freezer = Freezer(app, False)
 
 i = []
 
+#app._static_folder = '/home/orangey/minim/static/'
+
 app.config.update(dict(
     DATABASE=os.path.join(app.root_path, 'counts.db'),
-    DEBUG=True,
+    DEBUG=True
 ))
 app.config.from_envvar('FLASKR_SETTINGS', silent=True)
 
 sites=['BBC News US', 'BBC News UK', 'Vice', 'Vox']
 
-@app.route('/refresh/<offline>')
 def crawl(offline=0):
     if not os.path.isfile("counts.db"):
         with sqlite3.connect('counts.db') as db:
@@ -95,7 +100,7 @@ def home():
                                """, ([site]))
             i = curs.fetchall()[0]
             submit_id = i[0]
-            showratio = int(i[1]/10)
+            showratio = int(i[1]/3)
             logs[site]['data'] = {'cumul':i[1], 'articles':i[2], 'date':i[4], 'showratio':showratio, 'sitefeed':i[3], 'sitehome':i[5]}
             curs = db.execute("""SELECT word, count, appears, max_article
                                FROM wordage
@@ -125,4 +130,8 @@ def home():
     return render_template('home.html', logs=logs, sites=sites)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    freezer.freeze()
+#    local("cp ./static/*.csv ./build/")
+#    local("cp ./static/*.css ./build/")
+    print("Done.")
+#    app.run(host='0.0.0.0')
