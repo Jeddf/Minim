@@ -15,13 +15,13 @@ class RSSobject(object):
           if sitefeed:
                t = urlopen(sitefeed)
                self.raw = t.read()
-               self.soup = BeautifulSoup(self.raw)
+               self.soup = BeautifulSoup(self.raw, "xml")
                self.sitefeed = sitefeed
           else:
                self.sitefeed = 'http://google.com'
           self.borings = []
           for f in ["conjunctions", "prepositions", "determiners", "pronouns", "otherborings"]:
-               with open("/static/{}.csv".format(f), "r") as h:
+               with open("static/{}.csv".format(f), "r") as h:
                     t = h.read()
                     self.borings.extend(t.split())
                
@@ -64,14 +64,17 @@ class ViceRSS(RSSobject):    # Vice Class tailored for vice.com/rss as of March 
                i = str(i)
                i = i.replace(r'!', ' ')
                i = i.replace(r'–', ' ')
-               soop = BeautifulSoup(i)
+               soop = BeautifulSoup(i, "xml")
                self.articles.append({})
                self.articles[n]['title'] = soop.title.string
                self.articles[n]['href'] = soop.link.string
-               self.articles[n]['date'] = soop.pubdate.string
-               t = soop.get_text(" ", strip=True)
-               t = t.partition('[CDATA[')[2]
-               self.articles[n]['text'] = t.partition('< --')[0]
+               try:
+                    self.articles[n]['date'] = soop.pubdate.string
+               except AttributeError:
+                    self.articles[n]['date'] = soop.pubDate.string
+               t = soop.description.string
+               s = BeautifulSoup(t, "html")
+               self.articles[n]['text'] = s.get_text(" ", strip=True)
 
 class VoxRSS(RSSobject):
      def article_split(self, sitename='Vox', sitehome='http://vox.com'):
@@ -81,12 +84,12 @@ class VoxRSS(RSSobject):
           self.articles = []
           for n, i in enumerate(items):
                i = str(i)
-               soop = BeautifulSoup(i)
+               soop = BeautifulSoup(i, "xml")
                self.articles.append({})
                self.articles[n]['title'] = soop.title.string
                self.articles[n]['href'] = soop.id.string
                self.articles[n]['date'] = soop.updated.string
-               cont = BeautifulSoup(soop.content.string)
+               cont = BeautifulSoup(soop.content.string, "html")
                self.articles[n]['text'] = cont.get_text(" ", strip=True)
 
 class BBCRSS(RSSobject):
@@ -98,12 +101,16 @@ class BBCRSS(RSSobject):
           good = re.compile(r'ws/\S')
           links = []
           while hinks and (len(links) < maxart):
+               #pdb.set_trace()
                a = hinks.pop()
                a = a.string
-               a = a.partition('#')[0]
+               try:
+                    a = a.partition('#')[0]
+               except AttributeError:
+                    break
                a = a.replace('//www.', '//m.')
                if bad.search(a):
-                    pass
+                    continue
                elif good.search(a):
                     links.append(a)
           big = " "

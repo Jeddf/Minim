@@ -7,7 +7,7 @@ import sqlite3
 import RSSFeed
 from flask_frozen import Freezer
 
-app = Flask('Minim.py')
+app = Flask(__name__)
 
 freezer = Freezer(app, False)
 
@@ -130,6 +130,7 @@ def home():
     return render_template('home.html', logs=logs, sites=sites)
 
 if __name__ == '__main__':
+    crawl()
     freezer.freeze()
 #    local("cp ./static/*.csv ./build/")
 #    local("cp ./static/*.css ./build/")
