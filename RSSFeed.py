@@ -21,7 +21,7 @@ class RSSobject(object):
                self.sitefeed = 'http://google.com'
           self.borings = []
           for f in ["conjunctions", "prepositions", "determiners", "pronouns", "otherborings"]:
-               with open("static/{}.csv".format(f), "r") as h:
+               with open("words/{}.csv".format(f), "r") as h:
                     t = h.read()
                     self.borings.extend(t.split())
                
