@@ -1,12 +1,19 @@
-# MINIM
+# MINIM.li
 
-#### Web app displaying most used words across recently published articles
+#### Minimise the web.
+###### WHAT words are most common? 
+###### WHICH articles do they mainly appear in?! 
+###### HOW many of the articles are they in?!?!
+###### WHY is the BBC mostly writing "Mr"?!?!?!
 
-##### Currently works for:
-* BBCNEWS.com (http://feeds.bbci.co.uk/news/rss.xml?edition=us)
-* VICE.com (http://vice.com/rss)
-* VOX.com (http://vox.com/rss/index.xml)
+##### Pulls from:
+* BBC NEWS UK (http://feeds.bbci.co.uk/news/rss.xml?edition=uk)
+* BBC NEWS US (http://feeds.bbci.co.uk/news/rss.xml?edition=us)
+* VICE (http://vice.com/rss)
+* VOX (http://vox.com/rss/index.xml)
+* YOUR-FAVE-ONLINE-TEXT-OUTLET (http://www.asourceyouwroteaniftycrawlingscriptforandsubmittedapullrequestwith.heckyes)
 
-##### Instructions
-* run 'Minim.crawl()' in python3 console to initiate DB and crawl for data.
-* 'python3 Minim.py' to run flask app server
+##### To build locally (linux)
+* $git clone https://github.com/Jeddf/Minim.git
+* $cd Minim
+* $python3 minim.py # initiates DB as 'counts.db', crawls for data and saves the complete page ./builds

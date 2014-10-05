@@ -1,8 +1,9 @@
-import unittest, sources, re
+import unittest, RSSFeed, re
 from bs4 import BeautifulSoup
 
 class ViceTest(unittest.TestCase):
     def setUp(self):
+        self.vice = RSSFeed.ViceRSS(None)
         with open('vice.xml', 'r') as rss:
             self.vice.raw = rss.read()
             self.vice.soup = BeautifulSoup(self.vice.raw)
