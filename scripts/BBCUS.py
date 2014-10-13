@@ -1,4 +1,7 @@
+from urllib.request import urlopen
+from bs4 import BeautifulSoup
 from ParserBase import Parser
+import re
 
 class BBCRSSUS(Parser):   # BBC class tailored for feeds.bbci.co.uk/news/rss.xml?edition=us, returns 60-70 latest.
      

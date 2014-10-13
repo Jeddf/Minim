@@ -46,8 +46,6 @@ class Parser(object):
                               self.articles[x][t] = 1
                self.cumul = len(self.averages)
 
-# Subclasses from RSSobject, one for each site to be parsed, each with an article_split() method. Expect self.soup[BeautifulSoup], output self.articles[list of dicts] - {title:str, href:str, date:str, text:str}
-               
 
 
 

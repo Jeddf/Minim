@@ -1,3 +1,4 @@
+from bs4 import BeautifulSoup
 from ParserBase import Parser
 
 class ViceRSS(Parser):    # Vice Class tailored for vice.com/rss, typically returns 50 latest.

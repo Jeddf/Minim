@@ -1,17 +1,17 @@
-from BBCUK import BBCRSSUK, 
+from BBCUK import BBCRSSUK
 from BBCUS import BBCRSSUS
 from VICE import ViceRSS
-from VOX import VoxRSS 
-import sqlite3
+from VOX import VoxRSS
+import sqlite3, os
 
 # Crawl function, assumes 
 
 def crawlSources(sites):
     borings = []
     for f in ["conjunctions", "prepositions", "determiners", "pronouns", "otherborings"]:
-    with open("words/{}.csv".format(f), "r") as h:
-        t = h.read()
-        borings.extend(t.split())
+        with open("words/{}.csv".format(f), "r") as h:
+            t = h.read()
+            borings.extend(t.split())
     if not os.path.isfile("counts.db"):
         with sqlite3.connect('counts.db') as db:
             curs = db.cursor()

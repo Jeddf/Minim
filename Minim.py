@@ -12,7 +12,8 @@ i = []
 
 app.config.update(dict(
     DATABASE=os.path.join(app.root_path, 'counts.db'),
-    DEBUG=False
+    DEBUG=False,
+    FREEZER_DESTINATION = '/var/www/minim'
 ))
 app.config.from_envvar('FLASKR_SETTINGS', silent=True)
 
