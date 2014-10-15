@@ -1,10 +1,11 @@
+import sqlite3
+import os
+
 from BBCUK import BBCRSSUK
 from BBCUS import BBCRSSUS
 from VICE import ViceRSS
 from VOX import VoxRSS
-import sqlite3, os
 
-# Crawl function, assumes 
 
 def crawlSources(sites):
     borings = []
@@ -18,13 +19,13 @@ def crawlSources(sites):
             with open('schema.sql', mode='r') as f:
                 curs.executescript(f.read())
     i = []
-    i.append(BBCRSSUK())
-    i.append(BBCRSSUS())
-    i.append(ViceRSS())
-    i.append(VoxRSS())
+    i.append(BBCRSSUK(sites['BBCUK']))
+    i.append(BBCRSSUS(sites['BBCUS']))
+    i.append(ViceRSS(sites['VICE']))
+    i.append(VoxRSS(sites['VOX']))
     for n, t in enumerate(i):
-        t.article_split(sitename=sites[n])
-        t.average_words()
+        t.article_split()
+        t.average_words(borings)
         with sqlite3.connect('counts.db') as db:
             curs = db.cursor()
             curs.execute("""

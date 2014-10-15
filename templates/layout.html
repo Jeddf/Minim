@@ -17,9 +17,12 @@
   <footer>
     <a name='about'></a>
     <div><p>
-      Refreshed on {{logs['Vice']['data']['date']}} from the folowing feeds: <br>{% for sitename in sites %} <a href='{{logs[sitename]['data']['sitefeed']}}' target='_blank'>{{sitename}}</a><br>{% endfor %}Go behind the scenes at <a href='https://github.com/Jeddf/Minim' target='_blank'>Github.com/Jeddf/Minim</a> to see which words I thought were boring and how the site works.<br>
-    </div></p>
-    <p>...minim.li has no affiliation with mentioned websites...</p>
+        Refreshed on {{sites['Vice']['data']['date']}} from the folowing feeds: <br>{% for sitename in sites %} <a
+            href="{{sites[sitename]['sitefeed']}}" target='_blank'>{{sites[sitename]['sitename']}}</a><br>{% endfor %}Go
+        behind the scenes at <a href='https://github.com/Jeddf/Minim' target='_blank'>Github.com/Jeddf/Minim</a> to see
+        which words I thought were boring and how the site works.<br>
+    </p></div>
+      <p>...minim.li has no affiliation with mentioned websites...</p>
   </footer>
   </body>
 </html>
