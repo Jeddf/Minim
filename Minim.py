@@ -10,14 +10,14 @@ from crawl import crawlSources
 
 app = Flask(__name__)
 
-freezer = Freezer(app, False)
+freezer = Freezer(app, True)
 
 i = []
 
 app.config.update(dict(
     DATABASE=os.path.join(app.root_path, 'counts.db'),
-    DEBUG=False,
-    FREEZER_DESTINATION='/var/www/minim'
+    DEBUG=True,
+    FREEZER_DESTINATION='/var/www/minim.li'
 ))
 app.config.from_envvar('FLASKR_SETTINGS', silent=True)
 
@@ -50,7 +50,7 @@ def home():
                                FROM submits
                                WHERE id ==
                                (SELECT MAX(id) from submits WHERE sitename=?)
-                               """, ([site]))
+                               """, ([sites[site]['sitename']]))
             i = curs.fetchall()[0]
             submit_id = i[0]
             showratio = int(i[1] / 3)
