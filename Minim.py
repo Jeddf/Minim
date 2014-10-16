@@ -85,7 +85,7 @@ def home():
 
 
 if __name__ == '__main__':
-    crawlSources()
+    crawlSources(sites)
     freezer.freeze()  # render html file to ./build directory
     # ensure 'build' dir contains css stylesheet and favicon
     print("Done.")

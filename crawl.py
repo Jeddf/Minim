@@ -19,10 +19,10 @@ def crawlSources(sites):
             with open('schema.sql', mode='r') as f:
                 curs.executescript(f.read())
     i = []
-    i.append(BBCRSSUK(sites['BBCUK']))
-    i.append(BBCRSSUS(sites['BBCUS']))
-    i.append(ViceRSS(sites['VICE']))
-    i.append(VoxRSS(sites['VOX']))
+    i.append(BBCRSSUK(**sites['BBCUK']))
+    i.append(BBCRSSUS(**sites['BBCUS']))
+    i.append(ViceRSS(**sites['VICE']))
+    i.append(VoxRSS(**sites['VOX']))
     for n, t in enumerate(i):
         t.article_split()
         t.average_words(borings)
