@@ -36,7 +36,8 @@ s = {
     'sitename': 'Vox',
     'sitefeed': 'http://www.vox.com/rss/index.xml',
     'sitehome': 'http://vox.com'
-}}
+    }
+}
 
 sites = OrderedDict(sorted(s.items(), key=lambda t: t[0]))  # order sites alphabetically 
 
