@@ -2,11 +2,9 @@ import os
 import sqlite3
 
 from flask import Flask, render_template
-
 from flask_frozen import Freezer
-
 from crawl import crawlSources
-
+from collections import OrderedDict
 
 app = Flask(__name__)
 
@@ -16,29 +14,31 @@ i = []
 
 app.config.update(dict(
     DATABASE=os.path.join(app.root_path, 'counts.db'),
-    DEBUG=True,
-    FREEZER_DESTINATION='/var/www/minim.li'
+    DEBUG=True
+    #FREEZER_DESTINATION='/var/www/minim.li'
 ))
 app.config.from_envvar('FLASKR_SETTINGS', silent=True)
 
-sites = {
+s = {
     'BBCUS': {  # Currently available site parsers
-                'sitename': 'BBC News US',
-                'sitefeed': "http://feeds.bbci.co.uk/news/rss.xml?edition=us",
-                'sitehome': 'http://bbc.com/news'
+    'sitename': 'BBC News US',
+    'sitefeed': "http://feeds.bbci.co.uk/news/rss.xml?edition=us",
+    'sitehome': 'http://bbc.com/news'
     }, 'BBCUK': {
     'sitename': 'BBC News UK',
     'sitefeed': "http://feeds.bbci.co.uk/news/rss.xml?edition=uk",
     'sitehome': 'http://bbc.co.uk/news'
-}, 'VICE': {
+    }, 'VICE': {
     'sitename': 'Vice',
     'sitefeed': 'http://www.vice.com/rss',
     'sitehome': 'http://vice.com'
-}, 'VOX': {
+    }, 'VOX': {
     'sitename': 'Vox',
     'sitefeed': 'http://www.vox.com/rss/index.xml',
     'sitehome': 'http://vox.com'
 }}
+
+sites = OrderedDict(sorted(s.items(), key=lambda t: t[0]))  # order sites alphabetically 
 
 @app.route('/')
 def home():
