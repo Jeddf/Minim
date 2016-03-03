@@ -14,8 +14,8 @@ i = []
 
 app.config.update(dict(
     DATABASE=os.path.join(app.root_path, 'counts.db'),
-    DEBUG=True
-    #FREEZER_DESTINATION='/var/www/minim.li'
+    DEBUG=True,
+    FREEZER_DESTINATION='/var/www/minim.li'
 ))
 app.config.from_envvar('FLASKR_SETTINGS', silent=True)
 
@@ -54,7 +54,8 @@ def home():
                                """, ([sites[site]['sitename']]))
             i = curs.fetchall()[0]
             submit_id = i[0]
-            showratio = int(i[1] / 3)
+            showratio = int(i[1] / 6)
+
             sites[site]['data'] = {'cumul': i[1], 'articles': i[2], 'date': i[4], 'showratio': showratio,
                                    'sitefeed': i[3], 'sitehome': i[5]}
             curs = db.execute("""SELECT word, count, appears, max_article
