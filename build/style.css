@@ -33,10 +33,6 @@ body {
     display: inline;
     float: right;
 }
-h1:after{
-content: ".li";
-font-size: 0.7em;
-}
 #main {
   width:100%;
   margin:0 auto;
@@ -78,7 +74,7 @@ font-size: 0.7em;
   -webkit-column-gap: 0;
   -moz-column-gap: 0;
   -ms-column-gap: 0;
-  padding-top: 2%;
+  padding-top: 1%;
   padding-bottom: 1%;
 }
 ul div{
@@ -112,7 +108,7 @@ ul div{
 footer {
   text-align: center;
   margin-top: 4%;
-  font-size: 0.7em;
+  font-size: 0.9em;
 }
 footer div {
     margin-bottom: 40px;
