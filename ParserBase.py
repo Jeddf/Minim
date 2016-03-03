@@ -37,6 +37,8 @@ class Parser(object):
                     t = esss.sub('', t)
                     if t in borings:
                         continue
+                    if "='" in t:
+                        continue
                     if t == "":
                         continue
                     if t in self.averages:
