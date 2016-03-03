@@ -10,8 +10,6 @@ class ViceRSS(Parser):    # Vice Class tailored for vice.com/rss, typically retu
         self.articles = []
         for n, i in enumerate(items):
             i = str(i)
-            i = i.replace(r'!', ' ')
-            i = i.replace(r'–', ' ')
             soop = BeautifulSoup(i, "xml")
             self.articles.append({})
             self.articles[n]['title'] = soop.title.string
@@ -20,6 +18,6 @@ class ViceRSS(Parser):    # Vice Class tailored for vice.com/rss, typically retu
                 self.articles[n]['date'] = soop.pubdate.string
             except AttributeError:
                 self.articles[n]['date'] = soop.pubDate.string
-            t = soop.description.string
+            t = soop.encoded.string
             s = BeautifulSoup(t, "html")
             self.articles[n]['text'] = s.get_text(" ", strip=True)
