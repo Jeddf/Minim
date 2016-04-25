@@ -1,4 +1,5 @@
-# MINIM.li
+# MINIM
+Live at https://minim.jedd.pw
 
 ##### Minimise the web.
 A Python crawler and frontend to minimise written content one site at a time.
