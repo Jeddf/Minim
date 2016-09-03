@@ -19,7 +19,7 @@ app.config.update(dict(
 ))
 app.config.from_envvar('FLASKR_SETTINGS', silent=True)
 
-s = {
+sites = {
     'BBCUS': {  # Currently available site parsers
     'sitename': 'BBC News US',
     'sitefeed': "http://feeds.bbci.co.uk/news/rss.xml?edition=us",
@@ -39,24 +39,24 @@ s = {
     }
 }
 
-sites = OrderedDict(sorted(s.items(), key=lambda t: t[0]))  # order sites alphabetically 
+orderedSites = OrderedDict(sorted(sites.items(), key=lambda t: t[0]))  # order sites alphabetically 
 
 @app.route('/')
 def home():
     with sqlite3.connect('counts.db') as db:
         curs = db.cursor()
-        for site in sites:
-            sites[site]['data'] = []
+        for site in orderedSites:
+            orderedSites[site]['data'] = []
             curs = db.execute("""SELECT id, cumul, articles, sitefeed, date, sitehome
                                FROM submits
                                WHERE id ==
                                (SELECT MAX(id) from submits WHERE sitename=?)
-                               """, ([sites[site]['sitename']]))
+                               """, ([orderedSites[site]['sitename']]))
             i = curs.fetchall()[0]
             submit_id = i[0]
             showratio = int(i[1] / 6)
 
-            sites[site]['data'] = {'cumul': i[1], 'articles': i[2], 'date': i[4], 'showratio': showratio,
+            orderedSites[site]['data'] = {'cumul': i[1], 'articles': i[2], 'date': i[4], 'showratio': showratio,
                                    'sitefeed': i[3], 'sitehome': i[5]}
             curs = db.execute("""SELECT word, count, appears, max_article
                                FROM wordage
@@ -64,7 +64,7 @@ def home():
                                ORDER BY count DESC
                               """, ([submit_id]))
             l = curs.fetchall()
-            sites[site]['words'] = []
+            orderedSites[site]['words'] = []
             for r in l:
                 thrd = round(i[2] / 3)
                 if r[2] < 3:
@@ -73,8 +73,8 @@ def home():
                     a = 2
                 else:
                     a = 3
-                sites[site]['words'].append({'word': r[0], 'counted': r[1], 'max_article': r[3], 'appears': a})
-            sites[site]['articles'] = []
+                orderedSites[site]['words'].append({'word': r[0], 'counted': r[1], 'max_article': r[3], 'appears': a})
+            orderedSites[site]['articles'] = []
             curs = db.execute("""SELECT id, href, title
                                  FROM articles
                                  WHERE submitid == ?
@@ -82,12 +82,12 @@ def home():
                               """, ([submit_id]))
             l = curs.fetchall()
             for r in l:
-                sites[site]['articles'].append({'id': r[0], 'href': r[1], 'title': r[2]})
-    return render_template('home.html', sites=sites)
+                orderedSites[site]['articles'].append({'id': r[0], 'href': r[1], 'title': r[2]})
+    return render_template('home.html', sites=orderedSites)
 
 
 if __name__ == '__main__':
-    crawlSources(sites)
+    crawlSources(orderedSites)
     freezer.freeze()  # render html file to ./build directory
     # ensure 'build' dir contains css stylesheet and favicon
     print("Done.")
