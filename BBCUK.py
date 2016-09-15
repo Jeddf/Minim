@@ -9,54 +9,55 @@ from ParserBase import Parser
 class BBCRSSUK(Parser):   # BBC class tailored for feeds.bbci.co.uk/news/rss.xml?edition=uk, returns 60-70 latest.
 
     def article_split(self):
-        hinks = self.soup.find_all('link')
-        bad = re.compile(r'(/news/\d|ws/in-pictures)')
-        good = re.compile(r'ws/\S')
-        links = []
-        while hinks:
-            a = hinks.pop()
-            a = a.string
+        links = self.soup.find_all('link')
+        badPattern = re.compile(r'(/news/\d|ws/in-pictures)')
+        goodPattern = re.compile(r'ws/\S')
+        hrefs = []
+        while links:
+            link = links.pop()
+            link = link.string
             try:
-                a = a.partition('#')[0]
+                link = link.partition('#')[0]
             except AttributeError:
                 break
-            a = a.replace('//www.', '//m.')  # Specify mobile version to minimise bandwidth
-            if bad.search(a):
+            link = link.replace('//www.', '//m.')  # Specify mobile version to minimise bandwidth
+            if badPattern.search(link):
                 continue
-            elif good.search(a):
-                links.append(a)
+            elif goodPattern.search(link):
+                hrefs.append(link)
         self.articles = []
-        for n, href in enumerate(links):
+        for index, href in enumerate(hrefs):
             rawpage = urlopen(href)
             page = rawpage.read()
-            self.articles.append(self.page_parse(page))
-            self.articles[n]['href'] = href
+            self.articles.append(self.pageParse(page))
+            self.articles[index]['href'] = href
 
-    def page_parse(self, page):  # Extracts the meat from BBC article pages
-        p = BeautifulSoup(page)
-        article = {'title': p.h1.get_text()}
-        if p.find(class_="date"):
-            article['date'] = p.find(class_="date").get_text().strip()[0:11]
+    def pageParse(self, page):  # Extracts the meat from BBC article pages
+        pageSoup = BeautifulSoup(page)
+        article = {}
+        article['title'] = pageSoup.h1.get_text()
+        if pageSoup.find(class_="date"):
+            article['date'] = pageSoup.find(class_="date").get_text().strip()[0:11]
         else:
             article['date'] = " "
-        d = p.find(class_='map-body')  # deal with various possible page structures.
-        e = p.find(class_='story-inner')
-        f = p.find(class_='story-body')
-        g = p.find(class_='picture-gallery')
-        if f:
-            tex = f.find_all('p') + f.find_all('ul')
-        elif d:
-            tex = d.find_all('p') + e.find_all('ul')
-        elif e:
-            tex = e.find_all('p') + e.find_all('ul')
-        elif g:
-            tex = g.find_all('p')
+        mapBody = pageSoup.find(class_='map-body')  # deal with various possible page structures.
+        storyInner = pageSoup.find(class_='story-inner')
+        storyBody = pageSoup.find(class_='story-body')
+        pictureGallery = pageSoup.find(class_='picture-gallery')
+        if storyBody:
+            textElements = storyBody.find_all('p') + storyBody.find_all('ul')
+        elif mapBody:
+            textElements = mapBody.find_all('p') + storyInner.find_all('ul')
+        elif storyInner:
+            textElements = storyInner.find_all('p') + storyInner.find_all('ul')
+        elif pictureGallery:
+            textElements = pictureGallery.find_all('p')
         article['text'] = ""
-        for h in tex:
+        for textElement in textElements:
             try:
-                if 'date' in h['class']:
+                if 'date' in textElement['class']:
                     continue
             except KeyError:
                 pass
-            article['text'] += " " + h.get_text()
+            article['text'] += " " + textElement.get_text()
         return article

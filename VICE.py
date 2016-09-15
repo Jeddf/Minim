@@ -8,16 +8,16 @@ class ViceRSS(Parser):    # Vice Class tailored for vice.com/rss, typically retu
     def article_split(self):
         items = self.soup.find_all('item')
         self.articles = []
-        for n, i in enumerate(items):
-            i = str(i)
-            soop = BeautifulSoup(i, "xml")
+        for index, item in enumerate(items):
+            item = str(item)
+            itemSoup = BeautifulSoup(item, "xml")
             self.articles.append({})
-            self.articles[n]['title'] = soop.title.string
-            self.articles[n]['href'] = soop.link.string
+            self.articles[index]['title'] = itemSoup.title.string
+            self.articles[index]['href'] = itemSoup.link.string
             try:
-                self.articles[n]['date'] = soop.pubdate.string
+                self.articles[index]['date'] = itemSoup.pubdate.string
             except AttributeError:
-                self.articles[n]['date'] = soop.pubDate.string
-            t = soop.encoded.string
-            s = BeautifulSoup(t, "html")
-            self.articles[n]['text'] = s.get_text(" ", strip=True)
+                self.articles[index]['date'] = itemSoup.pubDate.string
+            mainText = itemSoup.encoded.string
+            mainTextSoup = BeautifulSoup(mainText, "html")
+            self.articles[index]['text'] = mainTextSoup.get_text(" ", strip=True)

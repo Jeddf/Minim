@@ -18,37 +18,37 @@ class Parser(object):
         self.sitefeed = sitefeed
         self.sitehome = sitehome
         self.sitename = sitename
-        t = urlopen(self.sitefeed)
-        self.raw = t.read()
+        rawSite = urlopen(self.sitefeed)
+        self.raw = rawSite.read()
         self.soup = BeautifulSoup(self.raw, "xml")
 
     # Step through words in each article, form overall counts. Expects: list of dictionaries at self.articles, each containing 'text' string.
-    def average_words(self, borings):
+    def average_words(self, boringWords):
         if self.articles:
             self.averages = {}
-            ess = re.compile(r"'s")  # down with esses!
-            esss = re.compile(r"’s")  # and essses.
+            pluralPattern1 = re.compile(r"'s")  # down with esses!
+            pluralPattern2 = re.compile(r"’s")  # and essses.
             for x, i in enumerate(self.articles):
                 words = i['text'].split()
-                for t in words:
-                    t = t.strip(string.punctuation + '“”‘’')
-                    t = t.strip(string.punctuation + '“”‘’').capitalize()
-                    t = ess.sub('', t)
-                    t = esss.sub('', t)
-                    if t in borings:
+                for word in words:
+                    word = word.strip(string.punctuation + '“”‘’')
+                    word = word.strip(string.punctuation + '“”‘’').capitalize()
+                    word = pluralPattern1.sub('', word)
+                    word = pluralPattern2.sub('', word)
+                    if word in boringWords:
                         continue
-                    if "='" in t:
+                    if "='" in word:
                         continue
-                    if t == "":
+                    if word == "":
                         continue
-                    if t in self.averages:
-                        self.averages[t] += 1
-                        if t in self.articles[x]:
-                            self.articles[x][t] += 1
+                    if word in self.averages:
+                        self.averages[word] += 1
+                        if word in self.articles[x]:
+                            self.articles[x][word] += 1
                         else:
-                            self.articles[x][t] = 1
+                            self.articles[x][word] = 1
 
                     else:
-                        self.averages[t] = 1
-                        self.articles[x][t] = 1
+                        self.averages[word] = 1
+                        self.articles[x][word] = 1
             self.cumul = len(self.averages)
