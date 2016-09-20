@@ -3,10 +3,10 @@ from urllib.request import urlopen
 
 from bs4 import BeautifulSoup
 
-from ParserBase import Parser
+from .ParserBase import Parser
 
 
-class BBCRSSUS(Parser):   # BBC class tailored for feeds.bbci.co.uk/news/rss.xml?edition=us, returns 60-70 latest.
+class BBCRSS(Parser):   # BBC class tailored for feeds.bbci.co.uk/news/rss.xml?edition=uk, returns 60-70 latest.
 
     def article_split(self):
         links = self.soup.find_all('link')
@@ -20,7 +20,6 @@ class BBCRSSUS(Parser):   # BBC class tailored for feeds.bbci.co.uk/news/rss.xml
                 link = link.partition('#')[0]
             except AttributeError:
                 break
-            link = link.replace('//www.', '//m.')  # Specify mobile version to minimise bandwidth
             if badPattern.search(link):
                 continue
             elif goodPattern.search(link):
@@ -34,7 +33,7 @@ class BBCRSSUS(Parser):   # BBC class tailored for feeds.bbci.co.uk/news/rss.xml
 
     def pageParse(self, page):  # Extracts the meat from BBC article pages
         pageSoup = BeautifulSoup(page)
-        article = {}
+        article = dict()
         article['title'] = pageSoup.h1.get_text()
         if pageSoup.find(class_="date"):
             article['date'] = pageSoup.find(class_="date").get_text().strip()[0:11]
@@ -44,6 +43,7 @@ class BBCRSSUS(Parser):   # BBC class tailored for feeds.bbci.co.uk/news/rss.xml
         storyInner = pageSoup.find(class_='story-inner')
         storyBody = pageSoup.find(class_='story-body')
         pictureGallery = pageSoup.find(class_='picture-gallery')
+        textElements = dict()
         if storyBody:
             textElements = storyBody.find_all('p') + storyBody.find_all('ul')
         elif mapBody:
@@ -56,6 +56,8 @@ class BBCRSSUS(Parser):   # BBC class tailored for feeds.bbci.co.uk/news/rss.xml
         for textElement in textElements:
             try:
                 if 'date' in textElement['class']:
+                    continue
+                if 'twite' in textElement['class']:
                     continue
             except KeyError:
                 pass

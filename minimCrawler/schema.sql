@@ -1,8 +1,8 @@
 CREATE TABLE submits(
-       id INTEGER PRIMARY KEY NOT NULL, 
+       id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,
        sitename TEXT,
-       cumul NUMBER,
-       articles NUMBER,
+       cumul INTEGER,
+       articles INTEGER,
        sitefeed TEXT,
        sitehome TEXT, 
        date TEXT
@@ -21,7 +21,5 @@ CREATE TABLE articles (
        submitid INTEGER NOT NULL,
        id INTEGER NOT NULL,
        href TEXT NOT NULL,
-       title TEXT,
-       body TEXT,
        FOREIGN KEY(submitid) REFERENCES submits(id) ON DELETE CASCADE
 );

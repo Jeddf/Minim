@@ -28,13 +28,15 @@ class Parser(object):
             self.averages = {}
             pluralPattern1 = re.compile(r"'s")  # down with esses!
             pluralPattern2 = re.compile(r"’s")  # and essses.
+            aposterousPattern = re.compile(r"'")
             for x, i in enumerate(self.articles):
                 words = i['text'].split()
                 for word in words:
-                    word = word.strip(string.punctuation + '“”‘’')
-                    word = word.strip(string.punctuation + '“”‘’').capitalize()
+                    word = word.strip(string.punctuation + '“”‘’\'')
+                    word = word.strip(string.punctuation + '“”‘’\'').capitalize()
                     word = pluralPattern1.sub('', word)
                     word = pluralPattern2.sub('', word)
+                    word = aposterousPattern.sub('', word)
                     if word in boringWords:
                         continue
                     if "='" in word:
