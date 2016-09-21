@@ -86,10 +86,10 @@ def crawl(host, user, password, db, init):
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Crawl the webs and save to an sql database.')
-    parser.add_argument('--host', default='localhost', help='mysql host')
-    parser.add_argument('--user', default='localhost', help='mysql user')
-    parser.add_argument('--password', default='localhost', help='mysql password')
-    parser.add_argument('--db', default='db', help='mysql db')
+    parser.add_argument('--host', help='mysql host')
+    parser.add_argument('--user', help='mysql user')
+    parser.add_argument('--password', help='mysql password')
+    parser.add_argument('--db', help='mysql db')
     parser.add_argument('--init', default=False, help='initialize tables in database')
 
     args = parser.parse_args()

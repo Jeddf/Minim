@@ -95,10 +95,10 @@ def home():
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Render out HTML minim page from a mysql source.')
-    parser.add_argument('--host', default='localhost', help='mysql host')
-    parser.add_argument('--user', default='localhost', help='mysql user')
-    parser.add_argument('--password', default='localhost', help='mysql password')
-    parser.add_argument('--db', default='db', help='mysql db')
+    parser.add_argument('--host', help='mysql host')
+    parser.add_argument('--user', help='mysql user')
+    parser.add_argument('--password', help='mysql password')
+    parser.add_argument('--db', help='mysql db')
 
     args = parser.parse_args()
 

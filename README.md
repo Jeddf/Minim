@@ -1,8 +1,5 @@
 # MINIM
 Live at https://minim.jedd.pw
-
-##### Minimise the web.
-A Python crawler and frontend to minimise written content one site at a time.
 ###### WHAT words are most common? 
 ###### WHICH articles do they mainly appear in?! 
 ###### HOW many of the articles are they in?!?!
@@ -15,8 +12,13 @@ A Python crawler and frontend to minimise written content one site at a time.
 * VOX (http://vox.com/rss/index.xml)
 * YOUR-FAVE-ONLINE-TEXT-OUTLET (http://www.asourceyouwroteaniftycrawlingscriptforandsubmittedapullrequestwith.heckyes)
 
-#### To build locally (this will vary wildly depending on your environment)
+#### To crawl for wordz (this will vary wildly depending on your environment)
 * $git clone https://github.com/Jeddf/Minim.git
-* $cd Minim
+* $cd Minim/minimCrawler
 * $pip3 install -r requirements.txt
-* $python3 minim.py # initiates DB as 'counts.db', crawls for data and saves the complete page in ./builds
+* $python3 crawl.py --host <mysqlhost> --user <mysqluser> --password <mysqlpassword> --db <mysqldb>
+#### ...and build index.html
+* $cd ..
+* $pip3 install -r requirements.txt
+* $python3 Minim.py --host <mysqlhost> --user <mysqluser> --password <mysqlpassword> --db <mysqldb>
+
