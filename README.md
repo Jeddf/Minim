@@ -17,6 +17,7 @@ Live at https://minim.jedd.pw
 * $cd Minim/minimCrawler
 * $pip3 install -r requirements.txt
 * $python3 crawl.py --host <mysqlhost> --user <mysqluser> --password <mysqlpassword> --db <mysqldb>
+
 #### ...and build index.html
 * $cd ..
 * $pip3 install -r requirements.txt
