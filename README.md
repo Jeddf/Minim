@@ -1,5 +1,7 @@
 # MINIM
-Live at https://minim.jedd.pw
+A web-crawling news aggregation engine using Python and [Beautiful Soup](https://www.crummy.com/software/BeautifulSoup/), and a Flask application that spits out a slightly too large static frontend from the crawled data.
+
+Live and refreshed hourly at https://minim.jedd.pw
 ###### WHAT words are most common? 
 ###### WHICH articles do they mainly appear in?! 
 ###### HOW many of the articles are they in?!?!
