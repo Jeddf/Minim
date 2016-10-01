@@ -57,7 +57,11 @@ class BBCRSS(Parser):   # BBC class tailored for feeds.bbci.co.uk/news/rss.xml?e
             try:
                 if 'date' in textElement['class']:
                     continue
-                if 'twite' in textElement['class']:
+                if 'twite__channel-text' in textElement['class']:
+                    continue
+                if 'twite__title' in textElement['class']:
+                    continue
+                if 'share__title' in textElement['class']:
                     continue
             except KeyError:
                 pass
