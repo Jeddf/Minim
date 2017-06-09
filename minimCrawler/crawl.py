@@ -1,6 +1,5 @@
 import sys
 import os
-import pdb
 import argparse
 import pymysql.cursors
 

@@ -5,6 +5,14 @@ from bs4 import BeautifulSoup
 
 from .ParserBase import Parser
 
+def removeShares(element):
+    shareRow = element.find(class_='with-extracted-share-icons')
+    if (shareRow):
+        shareRow.extract()
+    shareTools = element.find(class_='share-tools--no-event-tag')
+    if (shareTools):
+        shareTools.extract()
+    return element
 
 class BBCRSS(Parser):   # BBC class tailored for feeds.bbci.co.uk/news/rss.xml?edition=uk, returns 60-70 latest.
 
@@ -33,6 +41,7 @@ class BBCRSS(Parser):   # BBC class tailored for feeds.bbci.co.uk/news/rss.xml?e
 
     def pageParse(self, page):  # Extracts the meat from BBC article pages
         pageSoup = BeautifulSoup(page)
+        pageSoup = removeShares(pageSoup)
         article = dict()
         article['title'] = pageSoup.h1.get_text()
         if pageSoup.find(class_="date"):
@@ -55,13 +64,19 @@ class BBCRSS(Parser):   # BBC class tailored for feeds.bbci.co.uk/news/rss.xml?e
         article['text'] = ""
         for textElement in textElements:
             try:
+                if 'off-screen' in textElement['class']:
+                    continue
                 if 'date' in textElement['class']:
                     continue
                 if 'twite__channel-text' in textElement['class']:
                     continue
                 if 'twite__title' in textElement['class']:
                     continue
+                if 'twite__copy-text' in textElement['class']:
+                    continue
                 if 'share__title' in textElement['class']:
+                    continue
+                if 'twite__new-window' in textElement['class']:
                     continue
             except KeyError:
                 pass
