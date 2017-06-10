@@ -2,15 +2,19 @@ a {
   text-decoration: inherit;
   color: inherit;
 }
-.group:after{
-  visibility:hidden;
-  display:block;
+.group:after {
+  visibility: hidden;
+  display: block;
   content: "";
   clear: both;
   height: 0;
 }
-* html .group { zoom: 1; }
-*:first-child+html .group { zoom: 1; }
+* html .group {
+  zoom: 1;
+}
+*:first-child+html .group {
+  zoom: 1;
+}
 body {
   margin: 0;
   margin-left: 10%;
@@ -26,12 +30,12 @@ body {
   font-size:0.9em;
 }
 #title-block h1 {
-    display: inline;
-    float:left;
+  display: inline;
+  float:left;
 }
 #title-block h2 {
-    display: inline;
-    float: right;
+  display: inline;
+  float: right;
 }
 #main {
   width:100%;
@@ -51,9 +55,6 @@ body {
   display: inline;
   font-size:0.8em;
 }
-.source {
-  float: right;
-}
 .data {
   width: 100%;
   margin:0 auto;
@@ -63,7 +64,7 @@ body {
   height: 260px;
   display: block;
 }
-.list{
+.list {
   height: 90%;
   min-width: 940px;
   -webkit-column-count: 4;
@@ -77,14 +78,11 @@ body {
   padding-top: 1%;
   padding-bottom: 1%;
 }
-ul div{
-  display:block;
-}
-.record{
+.record {
   width:90%;
   color:black;
 }
-.record:hover{
+.record:hover {
   color:white;
 }
 .word {
@@ -93,15 +91,15 @@ ul div{
 .count {
   float:right;
 }
-.reg1:after, .cou1:before{
+.reg1:after, .cou1:before {
   content:".";
   color:white;
 }
-.reg2:after, .cou2:before{
+.reg2:after, .cou2:before {
   content:"..";
   color:white;
 }
-.reg3:after, .cou3:before{
+.reg3:after, .cou3:before {
   content:"...";
   color:white;
 }
