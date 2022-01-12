@@ -6,7 +6,7 @@ import pymysql.cursors
 import parser as minimParser
 
 
-def crawl(host, user, password, db, init):
+def crawl(host, port, user, password, db, init):
     boringWords = []
     for wordType in ["conjunctions", "prepositions", "determiners", "pronouns", "otherborings"]:
         with open(os.path.abspath(sys.path[0] + "/words/{}.csv".format(wordType)), "r") as boringWordsNew:
@@ -14,6 +14,7 @@ def crawl(host, user, password, db, init):
             boringWords.extend(boringWordsNew.split())
 
     connection = pymysql.connect(host=host,
+                                 port=port,
                                  user=user,
                                  password=password,
                                  db=db,
@@ -86,6 +87,7 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Crawl the webs and save to an sql database.')
     parser.add_argument('--host', help='mysql host')
+    parser.add_argument('--port', help='mysql port', default='3306')
     parser.add_argument('--user', help='mysql user')
     parser.add_argument('--password', help='mysql password')
     parser.add_argument('--db', help='mysql db')
